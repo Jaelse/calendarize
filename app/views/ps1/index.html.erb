@@ -2,8 +2,27 @@
 <ul>
   <li>
     <a href="dividebyzero">Divide by zero</a>
+    <h3>Info:</h3>
+    <p>Initially we defined two variables 's' and 'b', where 's' is
+      the numerator and 'b' is the denominator and we assigned the
+      values as 1 and 0 to s and b respectively. Before dividing s
+      and b, we have an if statement to check if b is zero, if so
+      then it sends a message to the production error log saying that
+      the function is about to divide by zero. Since Zero division
+      error occured in previous line, control flows to rescue clause.
+      Raising this exception, gives the full trace to the error with
+      the line number in which the error occured.</p>
   </li>
   <li>
     <a href="nytimesscrapper">New York Times Articles</a>
+    <h3>Info:</h3>
+    <p>For parsing the New York times, HTML Parser Nokogiri gem is been
+      used in our solution. Open-uri gem is used to make Http request
+      for the website of New York times. By inspecting the New York
+      times website we have found elements with css class
+      '.story-heading' which had link and tittle of the headlines.
+      With the help of nokogiri we got all the elements with this css
+      class. On the view side, we looped through the array of headlines.
+      Then in each iteration we put the link to each headline.</p>
   </li>
 </ul>
