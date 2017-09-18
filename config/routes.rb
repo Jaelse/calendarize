@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   get 'ps1/dividebyzero' => 'ps1#dividebyzero'
   get 'ps1/nytimesscrapper' => 'ps1#nytimesscrapper'
 
+  get 'ps2/index'
+
   get 'problemsets/index'
 
   root :to => 'problemsets#index'
