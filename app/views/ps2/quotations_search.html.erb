@@ -1,0 +1,28 @@
+<h1>Search Results</h1>
+
+<% if @results_from_quote.first %>
+  <h3><%= "Found #{@keyword} in quotes:" %></h3>
+    &nbsp; &nbsp; &nbsp; <b>Quote &nbsp; Author name</b></br>
+  <ul>
+    <% for quote in @results_from_quote %>
+      <li>
+        <%= quote.quote %> &nbsp; <%= quote.author_name %>
+        <%= button_to "Kill", ps2_quotations_path , method: :get, params: { id: quote.id} %>
+      </li></br>
+    <% end %>
+  </ul>
+<% end %>
+
+
+<% if @results_from_author_name.first %>
+  <h3><%= "Found #{@keyword} in Author name:" %></h3>
+  &nbsp; &nbsp; &nbsp; <b>Quote &nbsp; Author name</b></br>
+  <ul>
+    <% for quote in @results_from_author_name %>
+      <li>
+        <%= quote.quote %> &nbsp; <%= quote.author_name %>
+        <%= button_to "Kill", ps2_quotations_path , method: :get, params: { id: quote.id} %>
+      </li></br>
+    <% end %>
+  </ul>
+<% end %>

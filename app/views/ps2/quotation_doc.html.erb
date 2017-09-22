@@ -1,0 +1,29 @@
+<h1>Quotation Documentation</h1>
+<ul>
+  <li>
+    For quotation search, the keyword is taken as a parameter.
+    This keyword is searched both on quote column and author column.
+    This query is done by looking for the keyword using where clause
+    and also not including the the quotes whose ids are stored to be killed.
+  </li>
+  <li>
+    Cookie_setup handles the cookie stuff. A cookie named killer has all
+    the ids that has been killed by the user. Initialy its value is -1.
+    When user click the kill button for any quote, their ids are stored
+    and accordingly queried in the database in future.
+  </li>
+  <li>User can set their default personlization by clicking
+    erase my personalization button which sets the cookie value back to 0.
+  </li>
+  <li>
+    Create action controls the insertion of new quotations.
+    If the user wants to add a new category, they can select
+    new category and then write a new category name below.
+  </li>
+  <li>
+    To import from another server for example from web6.cs.ac.th,
+    user just have to put the url of the xml file and it will be stored in the database.
+    The xml file scrapped using nokogiri and then saved to database.
+  </li>
+  <li><b>References:</b>Google, stackoverflow, ROR docs.</li>
+</ul>

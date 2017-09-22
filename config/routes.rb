@@ -4,7 +4,13 @@ Rails.application.routes.draw do
   get 'ps1/nytimesscrapper' => 'ps1#nytimesscrapper'
 
   get 'ps2/index'
-
+  get 'ps2/quotations' => 'ps2#quotations'
+  post 'ps2/create' => 'ps2#create'
+  get 'ps2/quotations_search' => 'ps2#quotations_search'
+  get 'ps2/quotation_doc' => 'ps2#quotation_doc'
+  get 'ps2/sql_problem_set' => 'ps2#sql_problem_set'
+  get 'ps2/sql_ps_doc' => 'ps2#sql_ps_doc'
+  post 'ps2/import_quotations' => 'ps2#import_quotations'
   get 'problemsets/index'
 
   root :to => 'problemsets#index'

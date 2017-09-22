@@ -1,0 +1,72 @@
+<h1>Quotations</h1>
+<% if flash[:notice] %>
+    <div class="notice"><%= flash[:notice] %></div>
+  <% end %>
+<%= form_tag("quotations_search", method: "get") do %>
+  <fieldset>
+    <legend>Search</legend>
+    <div class="search_form_row">
+      <%= label_tag(:keyword, "Search for:") %>
+      <%= text_field_tag(:keyword) %>
+      <%= submit_tag("Search") %>
+    </div>
+  </fieldset>
+<% end %>
+
+<% if !@quotations.blank? %>
+  <h3><%= "Quoations:" %></h3>
+  <ul>
+    <% for quote in @quotations %>
+      <li>
+        <%= quote.author_name %> : <%= quote.quote %>  &nbsp; <%= quote.category %>
+        <%= button_to "Kill", ps2_quotations_path , method: :get, params: { id: quote.id} %>
+      </li>
+      </br>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if params[:sort_by] == "date" %>
+  <%= link_to "Sort by category", :action => :quotations, :sort_by => :category %>
+<% else %>
+  <%= link_to "Sort by date", :action => :quotations, :sort_by => :date %>
+<% end %>
+
+<% if @quotations.count < Quotation.count %>
+  <%= button_to "Erase my personalization", ps2_quotations_path , method: :get, params: { id: -1} %>
+<% end %>
+
+<hr/>
+
+<%= form_tag("create", method: "post") do %>
+  <fieldset>
+    <legend>New Quotations</legend>
+    <% if flash[:create] %>
+        <div class="create"><%= flash[:create] %></div>
+    <% end %>
+    <div class="new_form_row">
+      <%= label_tag(:author_name, "Author Name:") %>
+      <%= text_field_tag :author_name,nil, :required => true%></br>
+      <%= label_tag(:categories, "Categories:") %>
+      <%= select_tag "Categories",options_for_select(Quotation.select("category").distinct.collect{ |c| [c.category, c.category]}.push("new category"), selected = "New Category") %></br>
+      <%= label_tag(:new_category, "New Category:") %>
+      <%= text_field_tag(:new_category) %></br>
+      <%= label_tag(:quote, "Quote:") %>
+      <%= text_field_tag(:quote,nil, :required => true) %></br>
+      <%= submit_tag("Create") %>
+    </div>
+  </fieldset>
+<% end %>
+
+
+
+<%= form_tag("import_quotations", method: "post") do %>
+  <fieldset>
+    <legend>Import Quotations</legend>
+    <div class="import_form_row">
+      <%= label_tag(:url, "Import xml file from:") %>
+      <%= text_field_tag(:url,nil, :required => true) %>
+      <%= submit_tag("Import") %>
+    </div>
+  </fieldset>
+<% end %>
