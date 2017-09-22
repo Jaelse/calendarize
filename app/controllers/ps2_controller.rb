@@ -1,4 +1,5 @@
 class Ps2Controller < ApplicationController
+  protect_from_forgery with: :null_session
   require 'open-uri'
   require 'nokogiri'
 
@@ -53,11 +54,7 @@ class Ps2Controller < ApplicationController
   end
 
   def sql_problem_set
-<<<<<<< HEAD
     send_file "#{Rails.root}/SQL_Solutions.txt"
-=======
-    @data = File.read("#{Rails.root}/something.txt")
->>>>>>> 04a8868d16a2c2b9014fd1b34c3a4f854891f1e0
   end
 
   def quotation_doc
