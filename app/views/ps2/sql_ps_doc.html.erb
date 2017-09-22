@@ -1,1 +1,146 @@
-<h1>Stocks I like</h1>
+<h1>SQL ProblemSet Documentation</h1>
+<ul>
+ <li>7 :: Loading the data from text file into the database : 
+
+Firstly we have created a table my_stocks with columns symbol, n_shares, date_acquired. we entered our stock data i.e symbol, n_shares, date acquired in a text file by separating the columns with tab. with the help of the query we copied the text file data into the my_stocks table.
+
+Copy My_Stocks From '/Home/Priyanka/Sql/Stocktable.Txt' Delimiter E'\T';
+
+The query explanation is that, it is copying the data from the given path to my_stocks table.
+ </li>
+
+ <li>8 :: Copying Data from One Table to Another :
+ 
+SELECT * INTO stock_price from (SELECT symbol, current_date as quote_date, 31  .415 as price FROM my_stocks) AS foo;
+
+We have created a table stock_price and we are inserting the columns respectively. Here for the column symbol the data is taken from my_stocks table, for quote_date we have used current_date function which gives the current date and for price it was mentioned in the question. we used foo as an alias.
+ </li>
+
+ <li>8 :: Copying half rows from my stocks into newly acquired stocks:
+
+Here we have created an another table called newly_acquired_stocks 
+To copy about half rows from the table my_stocks to newly_acquired_stocks we used this query.
+
+INSERT INTO newly_acquired_stocks SELECT * FROM my_stocks WHERE n_shares>=50;
+
+In this query we are inserting the data which has n_shares greater than 50 into newly_acquired_stocks.
+</li>
+
+<li>9 :: JOINing my stocks and stock prices : 
+
+SELECT M.symbol, (M.n_shares/S.price) AS no_of_shares, (M.n_shares*S.price) AS current_value FROM my_stocks M JOIN stock_price S ON M.symbol = S.symbol;
+
+We are using the above query to join two tables i.e my_stocks and stock price and calculating no_of_shares and current value.
+</li>
+
+<li>
+10 :: Inserting a row into my stocks : 
+
+INSERT INTO my_stocks VALUES('SSNLF',52,'1994-09-27);
+
+We are inserting a new row into my_stocks table with the above values.
+</li>
+
+<li>10 :: Using OUTER JOIN :
+
+SELECT M.symbol, M.n_shares, (M.n_shares/S.price) AS price_per_shares, (M.n_shares*S.price) AS current_value FROM  my_stocks M FULL OUTER JOIN stock_price S ON M.symbol = S.symbol;
+
+Here we using FULL OUTER JOIN to get the new inserted row from my_stocks.
+</li>
+
+<li>
+11 :: PL/SQL FUNCTION FOR ASCII :
+
+create or replace function sumascii (str varchar) returns integer as $$
+     
+declare
+x integer := 0;
+i integer;
+begin
+    for i in 1..length (str)
+    loop
+        x := x + ascii (substr (str, i, 1)) ;
+    end loop;
+    return x;
+end;
+$$ language plpgsql;
+
+
+Firstly We created a function called sumascii and declared two variables. Coming to For Loop it is calculating the ascii value of each substring from the length of total string, the substr is a function in PL/SQL which takes each sub string from the string.
+
+select symbol, sumascii(symbol) from my_stocks;
+
+With this query we are selecting symbol and it's ascii value by calling the function sumascii.   
+</li>
+
+<li>
+11 :: Update stock prices to set each stock’s value to whatever is returned :
+ 
+UPDATE stock_price set price=sumascii(symbol);
+
+Here we are assigning the ascii value of each symbol to the price in the stock_price table by using the function sumascii.
+</li>
+
+<li>
+11 :: PL/SQL Cursor FOR LOOP :
+
+TO return the aggregate value of the portfolio (n shares * price for each stock) we have used the below code which is in PL/SQL
+
+Create or replace function Portfolio() returns integer as $$
+
+declare
+   temp record;
+   count_step integer; 
+
+
+c1 cursor
+for SELECT (M.n_shares*S.price) AS current_value FROM my_stocks M JOIN stock_price S ON M.symbol = S.symbol;
+ 
+
+BEGIN 
+open c1;
+loop
+
+fetch c1 into temp;
+exit when not found;
+count_step := count_step + temp.current_value;
+end loop;
+close c1;
+return count_step;
+end;
+$$
+language plpgsql;
+
+In this code, a function is been created Portfolio(). Coming to Cursor, it fetches for the records given in the cursor, here we have given query which gives the current_value record and in For Loop, it terminates all the records which have been fetched by the cursor. But in for loop we used a logic which calculates the aggregate value of the current_value. 
+
+select portfolio();
+
+We are calling the portfolio function which returns the aggregate value of current_value. 
+
+
+</li>
+
+<li>
+12 :: Double your holdings in all the stocks whose price is higher than average :
+
+insert into my_stocks select symbol, n_shares, current_date as date_acquired from my_stocks where symbol in (select symbol from stock_price where price > (select avg(price) from stock_price));
+
+WE used this query to insert the data i.e n_shares, current _date to the columns, which have greater price value than the average price.
+</li>
+
+<li>
+12:: Select..group by.. query JOINing with stock prices to produce a report of symbols and total value held per symbol :
+
+select M.symbol as report_of_symbols, (SUM(M.n_shares)*S.price) as total_value_held_per_symbol from my_stocks M JOIN stock_price S ON M.symbol = S.symbol GROUP BY M.symbol, S.price;
+
+WE used the above query to join the two tables my_stocks and stock_price, In this we are calculating the total_value_per_symbol.
+</li>
+
+<li>
+12 :: Select..groupby..having..query to produce a report of symbols, total shares held, and total value held per symbol restricted to symbols :
+
+select M.symbol as report_of_symbols, SUM(n_shares) as total_shares_held, (SUM(M.n_shares)*S.price) as total_value_held_per_symbol from my_stocks M JOIN stock_price S ON M.symbol = S.symbol GROUP BY M.symbol, M.n_shares, S.price having COUNT(M.symbol) > 1;
+
+Here as we want the winners, which is basically the share which is more than one block. Hence we used the logic that whichever symbol in my_stocks table has count more than one are declared as the winners.
+</li>
+</ul>

@@ -1,0 +1,212 @@
+Script started on ศ. 22 ก.ย. 2560, 13:28:11
+]0;priyanka@priyanka-VirtualBox: ~[01;32mpriyanka@priyanka-VirtualBox[00m:[01;34m~[00m$ psql
+psql (9.6.4)
+Type "help" for help.
+
+priyanka=# create database ps2;
+CREATE DATABASE
+priyanka=# create database ps2;[C[C[C[C[C[C[C[C[C[C[C[Kcreate database ps2;[C[C[C[C[C[C[C[C[C[C[C[K\connect ps2;
+You are now connected to database "ps2" as user "priyanka".
+ps2=# create table my_stocks (
+ps2(# symbol
+ps2(# varchar(20) not null,
+ps2(# n_shares
+ps2(# integer not null,
+ps2(# date_acquired
+ps2(# date not null
+ps2(# );
+CREATE TABLE
+ps2=# COPY my_stocks FROM '/home/priyanka/Desktop/stocktable.txt' DELIMITER E'\t ';
+COPY 5
+ps2=# select * from my_stocl[Kks;
+ symbol  | n_shares | date_acquired 
+---------+----------+---------------
+ AEO     |       23 | 1977-08-11
+ AAPL    |       55 | 1976-04-12
+ AMZN    |      474 | 1997-05-21
+ DELL    |      488 | 2001-04-11
+ NYSE:KO |       46 | 1998-09-04
+(5 rows)
+
+ps2=# SELECT * INTO stock_price from (SELECT symbol, current_date as quote_date,  31.415 as price FROM my_stocks) AS foo;
+SELECT 5
+ps2=# select * from my[K[Kstock_price;
+ symbol  | quote_date | price  
+---------+------------+--------
+ AEO     | 2017-09-22 | 31.415
+ AAPL    | 2017-09-22 | 31.415
+ AMZN    | 2017-09-22 | 31.415
+ DELL    | 2017-09-22 | 31.415
+ NYSE:KO | 2017-09-22 | 31.415
+(5 rows)
+
+ps2=# create table newly_acquired_stocks (
+ps2(# symbol
+ps2(# varchar(20) not null,
+ps2(# n_shares
+ps2(# integer not null,
+ps2(# date_acquired
+ps2(# date not null
+ps2(# );
+CREATE TABLE
+ps2=# INSERT INTO newly_acquired_stocks SELECT * FROM my_stocks WHERE n_shares>= 50;
+INSERT 0 3
+ps2=# select * from newly_acquired_stocks;
+ symbol | n_shares | date_acquired 
+--------+----------+---------------
+ AAPL   |       55 | 1976-04-12
+ AMZN   |      474 | 1997-05-21
+ DELL   |      488 | 2001-04-11
+(3 rows)
+
+ps2=# SELECT M.symbol, M.n_shares, (M.n_shares/S.price) AS price_per_share, (M.n _shares*S.price) AS current_value FROM my_stocks M JOIN stock_price S ON M.symbo l = S.symbol;
+ symbol  | n_shares |    price_per_share     | current_value 
+---------+----------+------------------------+---------------
+ AEO     |       23 | 0.73213433073372592710 |       722.545
+ AAPL    |       55 |     1.7507560082763011 |      1727.825
+ AMZN    |      474 |    15.0883335985993952 |     14890.710
+ DELL    |      488 |    15.5339805825242718 |     15330.520
+ NYSE:KO |       46 |     1.4642686614674519 |      1445.090
+(5 rows)
+
+ps2=# INSERT INTO my_stocks VALUES('SSNLF',52,'1994-09-27');
+INSERT 0 1
+ps2=# SELECT M.symbol, M.n_shares, (M.n_shares/S.price) AS price_per_share, (M.n _shares*S.price) AS current_value FROM my_stocks M JOIN stock_price S ON M.symbo l = S.symbol;
+ symbol  | n_shares |    price_per_share     | current_value 
+---------+----------+------------------------+---------------
+ AEO     |       23 | 0.73213433073372592710 |       722.545
+ AAPL    |       55 |     1.7507560082763011 |      1727.825
+ AMZN    |      474 |    15.0883335985993952 |     14890.710
+ DELL    |      488 |    15.5339805825242718 |     15330.520
+ NYSE:KO |       46 |     1.4642686614674519 |      1445.090
+(5 rows)
+
+ps2=# SELECT M.symbol, M.n_shares, (M.n_shares/S.price) AS price_per_shares, (M. n_shares*S.price) AS current_value FROM  my_stocks M FULL OUTER JOIN stock_price  S ON M.symbol = S.symbol;
+ symbol  | n_shares |    price_per_shares    | current_value 
+---------+----------+------------------------+---------------
+ AEO     |       23 | 0.73213433073372592710 |       722.545
+ AAPL    |       55 |     1.7507560082763011 |      1727.825
+ AMZN    |      474 |    15.0883335985993952 |     14890.710
+ DELL    |      488 |    15.5339805825242718 |     15330.520
+ NYSE:KO |       46 |     1.4642686614674519 |      1445.090
+ SSNLF   |       52 |                        |              
+(6 rows)
+
+ps2=# create or replace function sumascii (str varchar) returns integer as $$
+ps2$#      
+ps2$# declare
+ps2$# x integer := 0;
+ps2$# i integer;
+ps2$# begin
+ps2$#     for i in 1..length (str)
+ps2$#     loop
+ps2$#         x := x + ascii (substr (str, i, 1)) ;
+ps2$#     end loop;
+ps2$#     return x;
+ps2$# end;
+ps2$# $$ language plpgsql;
+CREATE FUNCTION
+ps2=# select symbol, sumascii(symbol) from my_stocks;
+ symbol  | sumascii 
+---------+----------
+ AEO     |      213
+ AAPL    |      286
+ AMZN    |      310
+ DELL    |      289
+ NYSE:KO |      531
+ SSNLF   |      390
+(6 rows)
+
+ps2=# UPDATE stock_price set price=sumascii(symbol);
+UPDATE 5
+ps2=# select * from stock_price;
+ symbol  | quote_date | price 
+---------+------------+-------
+ AEO     | 2017-09-22 |   213
+ AAPL    | 2017-09-22 |   286
+ AMZN    | 2017-09-22 |   310
+ DELL    | 2017-09-22 |   289
+ NYSE:KO | 2017-09-22 |   531
+(5 rows)
+
+ps2=# Create or replace function Portfolio() returns integer as $$
+ps2$# 
+ps2$# declare
+ps2$#    temp record;
+ps2$#    count_step integer default 0; 
+ps2$# 
+ps2$# 
+ps2$# c1 cursor
+ps2$# for SELECT (M.n_shares*S.price) AS current_value FROM my_stocks M JOIN sto ck_price S ON M.symbol = S.symbol;
+ps2$#  
+ps2$# 
+ps2$# BEGIN 
+ps2$# open c1;
+ps2$# loop
+ps2$# 
+ps2$# fetch c1 into temp;
+ps2$# exit when not found;
+ps2$# count_step := count_step + temp.current_value;
+ps2$# end loop;
+ps2$# close c1;
+ps2$# return count_step;
+ps2$# end;
+ps2$# $$
+ps2-# language plpgsql;
+CREATE FUNCTION
+ps2=# select portfolio();
+ portfolio 
+-----------
+    333027
+(1 row)
+
+ps2=# insert into my_stocks select symbol, n_shares, current_date as date_acquir ed from my_stocks where symbol in (select symbol from stock_price where price >  (select avg(price) from stock_price));
+INSERT 0 1
+ps2=# select * frp[Ki[Kom my_stocks;
+ symbol  | n_shares | date_acquired 
+---------+----------+---------------
+ AEO     |       23 | 1977-08-11
+ AAPL    |       55 | 1976-04-12
+ AMZN    |      474 | 1997-05-21
+ DELL    |      488 | 2001-04-11
+ NYSE:KO |       46 | 1998-09-04
+ SSNLF   |       52 | 1994-09-27
+ NYSE:KO |       46 | 2017-09-22
+(7 rows)
+
+ps2=# select symbol as report_of_symbols, SUM(n_shares) as total_shares_held fro m my_stocks GROUP BY symbol;
+ report_of_symbols | total_shares_held 
+-------------------+-------------------
+ SSNLF             |                52
+ AAPL              |                55
+ NYSE:KO           |                92
+ AMZN              |               474
+ DELL              |               488
+ AEO               |                23
+(6 rows)
+
+ps2=# select M.symbol as report_of_symbols, (SUM(M.n_shares)*S.price) as total_v alue_held_per_symbol from my_stocks M JOIN stock_price S ON M.symbol = S.symbol  GROUP BY M.symbol, S.price;
+ report_of_symbols | total_value_held_per_symbol 
+-------------------+-----------------------------
+ DELL              |                      141032
+ AAPL              |                       15730
+ AEO               |                        4899
+ NYSE:KO           |                       48852
+ AMZN              |                      146940
+(5 rows)
+
+ps2=# select M.symbol as report_of_symbols, SUM(n_shares) as total_shares_held,  (SUM(M.n_shares)*S.price) as total_value_held_per_symbol from my_stocks M JOIN s tock_price S ON M.symbol = S.symbol GROUP BY M.symbol, M.n_shares, S.price havin g COUNT(M.symbol) > 1;
+ report_of_symbols | total_shares_held | total_value_held_per_symbol 
+-------------------+-------------------+-----------------------------
+ NYSE:KO           |                92 |                       48852
+(1 row)
+
+ps2=# ^Z
+[1]+  Stopped                 psql
+]0;priyanka@priyanka-VirtualBox: ~[01;32mpriyanka@priyanka-VirtualBox[00m:[01;34m~[00m$ exit
+exit
+There are stopped jobs.
+]0;priyanka@priyanka-VirtualBox: ~[01;32mpriyanka@priyanka-VirtualBox[00m:[01;34m~[00m$ exit
+exit
+
+Script done on ศ. 22 ก.ย. 2560, 13:38:12

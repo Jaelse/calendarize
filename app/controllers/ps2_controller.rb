@@ -53,6 +53,7 @@ class Ps2Controller < ApplicationController
   end
 
   def sql_problem_set
+    send_file "#{Rails.root}/SQL_Solutions.txt"
   end
 
   def quotation_doc
