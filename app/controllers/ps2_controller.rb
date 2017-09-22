@@ -53,6 +53,7 @@ class Ps2Controller < ApplicationController
   end
 
   def sql_problem_set
+    @data = File.read("#{Rails.root}/something.txt")
   end
 
   def quotation_doc
