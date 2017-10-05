@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'ps3/index'
+  get 'ps3/fictious_user1' => 'ps3#fictious_user1'
+  
+  
   get 'ps1/index'
   get 'ps1/dividebyzero' => 'ps1#dividebyzero'
   get 'ps1/nytimesscrapper' => 'ps1#nytimesscrapper'
@@ -11,6 +15,8 @@ Rails.application.routes.draw do
   get 'ps2/sql_problem_set' => 'ps2#sql_problem_set'
   get 'ps2/sql_ps_doc' => 'ps2#sql_ps_doc'
   post 'ps2/import_quotations' => 'ps2#import_quotations'
+  
+  
   get 'problemsets/index'
 
   root :to => 'problemsets#index'
