@@ -5,4 +5,10 @@ class Ps3Controller < ApplicationController
   def fictious_user1
   end
 
+  def fictious_user2
+  end
+ 
+  def fictious_user3
+  end
+
 end
