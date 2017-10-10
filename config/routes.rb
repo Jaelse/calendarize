@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   get 'ps3/fictious_user2' => 'ps3#fictious_user2'
   get 'ps3/fictious_user3' => 'ps3#fictious_user3'
   get 'ps3/jenkins_output' => 'ps3#jenkins_output' 
- 
+  get 'ps3/dump' => 'ps3#dump'  
+
   get 'ps1/index'
   get 'ps1/dividebyzero' => 'ps1#dividebyzero'
   get 'ps1/nytimesscrapper' => 'ps1#nytimesscrapper'

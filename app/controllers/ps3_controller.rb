@@ -13,4 +13,6 @@ class Ps3Controller < ApplicationController
   
   def jenkins_output
   end
+  def dump
+  end
 end
