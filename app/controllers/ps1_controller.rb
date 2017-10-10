@@ -13,7 +13,6 @@ class Ps1Controller < ApplicationController
       end
   @c = @s/@b
 	
-  echo @s
   rescue StandardError
   raise
 
