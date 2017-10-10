@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   get 'ps3/index'
   get 'ps3/fictious_user1' => 'ps3#fictious_user1'
-  
+  get 'ps3/fictious_user2' => 'ps3#fictious_user2'
+  get 'ps3/fictious_user3' => 'ps3#fictious_user3'
   
   get 'ps1/index'
   get 'ps1/dividebyzero' => 'ps1#dividebyzero'
