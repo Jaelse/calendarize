@@ -12,7 +12,7 @@ class Ps1Controller < ApplicationController
         logger.debug "about to divide by zero"
       end
   @c = @s/@b
-
+	
   rescue StandardError
   raise
 
