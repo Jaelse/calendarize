@@ -1,0 +1,291 @@
+{
+  "MiniTest": {
+    "coverage": {
+      "/home/jaelse/Documents/Rails/web17-08/config/environment.rb": [
+        null,
+        1,
+        null,
+        null,
+        1
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/environments/test.rb": [
+        1,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        1,
+        null,
+        null,
+        1,
+        1,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/initializers/application_controller_renderer.rb": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/initializers/assets.rb": [
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/initializers/backtrace_silencers.rb": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/initializers/cookies_serializer.rb": [
+        null,
+        null,
+        null,
+        null,
+        1
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/initializers/filter_parameter_logging.rb": [
+        null,
+        null,
+        null,
+        1
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/initializers/inflections.rb": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/initializers/mime_types.rb": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/initializers/wrap_parameters.rb": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        2,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/config/routes.rb": [
+        1,
+        1,
+        1,
+        null,
+        null,
+        1,
+        1,
+        1,
+        null,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        null,
+        null,
+        1,
+        null,
+        1,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/test/controllers/ps1_controller_test.rb": [
+        1,
+        null,
+        1,
+        1,
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/test/controllers/ps2_controller_test.rb": [
+        1,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/test/controllers/ps3_controller_test.rb": [
+        1,
+        null,
+        1,
+        null,
+        1,
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/test/models/quotation_test.rb": [
+        1,
+        null,
+        1,
+        null,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/models/quotation.rb": [
+        1,
+        1,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/models/application_record.rb": [
+        1,
+        1,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/controllers/ps3_controller.rb": [
+        1,
+        1,
+        null,
+        null,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/controllers/application_controller.rb": [
+        1,
+        1,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/helpers/application_helper.rb": [
+        1,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/helpers/problemsets_helper.rb": [
+        1,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/helpers/ps1_helper.rb": [
+        1,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/helpers/ps2_helper.rb": [
+        1,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/helpers/ps3_helper.rb": [
+        1,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/controllers/problemsets_controller.rb": [
+        1,
+        1,
+        null,
+        null
+      ],
+      "/home/jaelse/Documents/Rails/web17-08/app/controllers/ps1_controller.rb": [
+        1,
+        1,
+        1,
+        null,
+        1,
+        null,
+        null,
+        1,
+        0,
+        0,
+        0,
+        0,
+        null,
+        0,
+        null,
+        0,
+        null,
+        0,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
+        0,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1507639560
+  }
+}
