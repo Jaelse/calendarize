@@ -1,0 +1,144 @@
+Started by user web17-08
+Building in workspace /var/lib/jenkins/workspace/web17-08
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url git@vgl-ait.org:web17-08 # timeout=10
+Fetching upstream changes from git@vgl-ait.org:web17-08
+ > git --version # timeout=10
+using GIT_SSH to set credentials 
+ > git fetch --tags --progress git@vgl-ait.org:web17-08 +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 58fe45c4c36a5ef88d29f06a97b0d146e6343864 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 58fe45c4c36a5ef88d29f06a97b0d146e6343864
+Commit message: "Merge branch 'master' of vgl-ait.org:web17-08"
+ > git rev-list 1d611a6c644ae8baca9129b156a777706b838b76 # timeout=10
+$ bash -c "[ -d \$HOME/.rbenv ]"
+$ bash -c "[ -d \$HOME/.rbenv/plugins/ruby-build ]"
+$ bash -c "cd /var/lib/jenkins/workspace/web17-08 && env RBENV_ROOT\=\$HOME/.rbenv RBENV_VERSION\=2.4.1 CONFIGURE_OPTS\= RUBY_CONFIGURE_OPTS\= \$HOME/.rbenv/bin/rbenv local 2>/dev/null || true"
+$ bash -c "mkdir \$HOME/.rbenv/.lock"
+$ bash -c "env RBENV_ROOT\=\$HOME/.rbenv RBENV_VERSION\=2.4.1 CONFIGURE_OPTS\= RUBY_CONFIGURE_OPTS\= \$HOME/.rbenv/bin/rbenv versions --bare"
+$ bash -c "env RBENV_ROOT\=\$HOME/.rbenv RBENV_VERSION\=2.4.1 CONFIGURE_OPTS\= RUBY_CONFIGURE_OPTS\= \$HOME/.rbenv/bin/rbenv rehash"
+$ bash -c "env RBENV_ROOT\=\$HOME/.rbenv RBENV_VERSION\=2.4.1 CONFIGURE_OPTS\= RUBY_CONFIGURE_OPTS\= \$HOME/.rbenv/bin/rbenv exec gem list"
+$ bash -c "env RBENV_ROOT\=\$HOME/.rbenv RBENV_VERSION\=2.4.1 CONFIGURE_OPTS\= RUBY_CONFIGURE_OPTS\= \$HOME/.rbenv/bin/rbenv rehash"
+$ bash -c "rm -rf \$HOME/.rbenv/.lock"
+[web17-08] $ /bin/sh -xe /tmp/jenkins1165211286339725530.sh
++ bundle install
+The latest bundler is 1.16.0.pre.3, but you are currently running 1.15.4.
+To update, run `gem install bundler --pre`
+Using rake 12.1.0
+Using concurrent-ruby 1.0.5
+Using i18n 0.8.6
+Using minitest 5.10.3
+Using thread_safe 0.3.6
+Using builder 3.2.3
+Using erubi 1.6.1
+Using mini_portile2 2.2.0
+Using rack 2.0.3
+Using nio4r 2.1.0
+Using websocket-extensions 0.1.2
+Using mime-types-data 3.2016.0521
+Using arel 8.0.0
+Using public_suffix 3.0.0
+Using net-ssh 4.2.0
+Using bindex 0.5.0
+Using bundler 1.15.4
+Using byebug 9.1.0
+Using mini_mime 0.1.4
+Using ffi 1.9.18
+Using coffee-script-source 1.12.2
+Using execjs 2.7.0
+Using method_source 0.8.2
+Using thor 0.20.0
+Using docile 1.1.5
+Using multi_json 1.12.1
+Using json 2.1.0
+Using rb-fsevent 0.10.2
+Using ruby_dep 1.5.0
+Using pg 0.21.0
+Using puma 3.10.0
+Using rubyzip 1.2.1
+Using tilt 2.0.8
+Using simplecov-html 0.10.2
+Using turbolinks-source 5.0.3
+Using tzinfo 1.2.3
+Using nokogiri 1.8.0
+Using rack-test 0.6.3
+Using sprockets 3.7.1
+Using websocket-driver 0.6.5
+Using mime-types 3.1
+Using addressable 2.5.2
+Using net-scp 1.2.1
+Using childprocess 0.7.1
+Using rb-inotify 0.9.10
+Using coffee-script 2.4.1
+Using uglifier 3.2.0
+Using simplecov 0.15.1
+Using turbolinks 5.0.1
+Using activesupport 5.1.3
+Using loofah 2.0.3
+Using xpath 2.1.0
+Using mail 2.6.6
+Using sshkit 1.14.0
+Using selenium-webdriver 3.5.1
+Using listen 3.1.5
+Using sass-listen 4.0.0
+Using rails-dom-testing 2.0.3
+Using globalid 0.4.0
+Using activemodel 5.1.3
+Using jbuilder 2.7.0
+Using spring 2.0.2
+Using rails-html-sanitizer 1.0.3
+Using capybara 2.15.1
+Using airbrussh 1.3.0
+Using sass 3.5.1
+Using activejob 5.1.3
+Using activemodel-serializers-xml 1.0.2
+Using activerecord 5.1.3
+Using spring-watcher-listen 2.0.1
+Using actionview 5.1.3
+Using capistrano 3.9.1
+Using actionpack 5.1.3
+Using capistrano-bundler 1.3.0
+Using capistrano-passenger 0.2.0
+Using capistrano-rbenv 2.1.2
+Using capistrano-secrets-yml 1.0.0
+Using capistrano-shell 0.2.0
+Using actioncable 5.1.3
+Using actionmailer 5.1.3
+Using railties 5.1.3
+Using sprockets-rails 3.2.1
+Using capistrano-rails 1.3.0
+Using capistrano-rbenv-install 1.2.0
+Using coffee-rails 4.2.2
+Using web-console 3.5.1
+Using rails 5.1.3
+Using sass-rails 5.0.6
+Bundle complete! 24 Gemfile dependencies, 88 gems now installed.
+Use `bundle info [gemname]` to see where a bundled gem is installed.
++ rake db:create
+Database 'web17-08_development' already exists
+Database 'web17-08_test' already exists
++ rake db:schema:load
+-- enable_extension("plpgsql")
+   -> 0.0289s
+-- create_table("quotations", {:force=>:cascade})
+   -> 0.2792s
+-- enable_extension("plpgsql")
+   -> 0.0306s
+-- create_table("quotations", {:force=>:cascade})
+   -> 0.1864s
++ rake db:test:prepare
++ rake test
+Run options: --seed 63434
+
+# Running:
+
+...
+
+Finished in 0.799016s, 3.7546 runs/s, 3.7546 assertions/s.
+3 runs, 3 assertions, 0 failures, 0 errors, 0 skips
+Coverage report generated for MiniTest to /var/lib/jenkins/workspace/web17-08/coverage. 76 / 84 LOC (90.48%) covered.
+Finished: SUCCESS
+

@@ -10,5 +10,7 @@ class Ps3Controller < ApplicationController
  
   def fictious_user3
   end
-
+  
+  def jenkins_output
+  end
 end
