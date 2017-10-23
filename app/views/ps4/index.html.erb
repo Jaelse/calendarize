@@ -1,2 +1,39 @@
-<h1>Ps4#index</h1>
-<p>Find me in app/views/ps4/index.html.erb</p>
+<h1>Problem Set 4</h1>
+
+<h3>User content</h3>
+<h5>Potential content available from the site:</h5>
+1. Comments of each user is available on the site.
+<br> 2. Faculty can import their schedules through Google Calendar.
+<br> 3. Every activity will have sequence of meetings, where schedules of these meetings will be available in the site.
+<br> 4. Members of an individual activity can see the scheduling of other members.
+<h5>Technology:</h5>
+
+This site uses Apache web server with ruby on rails, Node JS and Postgres as thedatabase.
+The basic information processing requirements:
+<br> 1. User database, contains Information of each user. The uncommon attributes ofstudent, faculty and secretary will be stored separately and the common attributes will be inherited the user table. The privileges of different type of users will be decided through the logged in user information. 
+<br> 2. Content database, storing the comments, schedules and members for each activity.
+<br> 3. In user/content map, it shows the information of the faculty of a particular activity, faculty can change his scheduling according to his preferences and whenever there is any change in scheduling other members in the activity will be notified. For student, whenever he is ready for a meeting a notification by the mail will be sent to the faculty of that activity.
+<br> 4. The user/user map contains the information of the relationship between each
+user (student, faculty, secretary) for involving in an activity and comments.
+
+
+<h3> XSS and SQL Injection Attack</h3>
+
+<h5>XSS Attack:</h5>
+In our development framework to avoid XSS attack we are using "sanitize Helper" module because instead of escaping everything, it actually allows only the html tags which are safe. It does prevent cross-site scripting because it strips down unallowed attributes.
+
+<h5>SQL Injection:</h5>
+ 
+In our application we have queries which can include user input, which may or may not have SQL Injections. 
+Example:
+<br>@student = @student.where("project like '%#{params[:query]}%'") 
+<br>In the above query, one can put anything into the search query including potentially harmful content. We solve it by the use of an array.
+<br>@student = @student.where("project like ", params[:query])
+<br>In the above, instead of using harmful content we use an array to avoid SQL Injection. 
+
+<h3> Auditing the software</h3>
+Sensitive data in our site is SuperAdmin's email address and password. This willbe stored in a different table, initially seeded with one SuperAdmin. The password for this SuperAdmin will hashed and then stored in the table.Since the authentication of other users will be done by LDAP there is no need to store the password of these users. SSL is used in all the pages of the site which will keep thesession of any user secure.
+<h3> Referential Integrity</h3>
+The referential Integrity for our data model is:
+In User - Secretary relationship, In user table uid is primary key which is usedfor reference to the table of secretary.
+In User - Student relationship, In user table uid is primary key which is usedc
