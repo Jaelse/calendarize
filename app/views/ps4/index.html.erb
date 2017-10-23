@@ -1,12 +1,12 @@
 <h1>Problem Set 4</h1>
 
 <h3>User content</h3>
-<h5>Potential content available from the site:</h5>
+<h4>Potential content available from the site:</h4>
 1. Comments of each user is available on the site.
 <br> 2. Faculty can import their schedules through Google Calendar.
 <br> 3. Every activity will have sequence of meetings, where schedules of these meetings will be available in the site.
 <br> 4. Members of an individual activity can see the scheduling of other members.
-<h5>Technology:</h5>
+<h4>Technology:</h4>
 
 This site uses Apache web server with ruby on rails, Node JS and Postgres as thedatabase.
 The basic information processing requirements:
@@ -19,10 +19,10 @@ user (student, faculty, secretary) for involving in an activity and comments.
 
 <h3> XSS and SQL Injection Attack</h3>
 
-<h5>XSS Attack:</h5>
+<h4>XSS Attack:</h4>
 In our development framework to avoid XSS attack we are using "sanitize Helper" module because instead of escaping everything, it actually allows only the html tags which are safe. It does prevent cross-site scripting because it strips down unallowed attributes.
 
-<h5>SQL Injection:</h5>
+<h4>SQL Injection:</h4>
  
 In our application we have queries which can include user input, which may or may not have SQL Injections. 
 Example:
@@ -35,5 +35,14 @@ Example:
 Sensitive data in our site is SuperAdmin's email address and password. This willbe stored in a different table, initially seeded with one SuperAdmin. The password for this SuperAdmin will hashed and then stored in the table.Since the authentication of other users will be done by LDAP there is no need to store the password of these users. SSL is used in all the pages of the site which will keep thesession of any user secure.
 <h3> Referential Integrity</h3>
 The referential Integrity for our data model is:
-In User - Secretary relationship, In user table uid is primary key which is usedfor reference to the table of secretary.
-In User - Student relationship, In user table uid is primary key which is usedc
+ User - Secretary have one to many relationship.
+ User - Student have one to many relationship.
+ User - Faculty have one to many relationship.
+ User - Members have one to many relationship.
+ User - Comments have one to many relationship.
+
+As in the above relationships every table is referencing other by its forieng key which is the primary key of one of the table. In other words, the foreign key field agrees with the primary key that is referenced by the foreign key.
+
+<h3>Query Optimization</h3>
+In our database query optimization is needed for the activity... because .. due to this the processing becomes slow and the efficiency decreases.   in query where we have to join tables which creates  
+ 
