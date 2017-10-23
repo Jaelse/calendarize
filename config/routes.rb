@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'ps4/index'
+
   get 'ps3/index'
   get 'ps3/fictious_user1' => 'ps3#fictious_user1'
   get 'ps3/fictious_user2' => 'ps3#fictious_user2'
