@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'ps4/index'
+  get 'ps4/download_pdf'
 
   get 'ps3/index'
   get 'ps3/fictious_user1' => 'ps3#fictious_user1'
