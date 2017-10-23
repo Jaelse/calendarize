@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
+  get 'calendarize/index'
+
+  get 'canlendarize/index'
+
+  get 'conlendarize/index'
+
   get 'ps4/index'
   get 'ps4/download_pdf'
-
+  get 'ps4/statemodel_pdf'
   get 'ps3/index'
   get 'ps3/fictious_user1' => 'ps3#fictious_user1'
   get 'ps3/fictious_user2' => 'ps3#fictious_user2'

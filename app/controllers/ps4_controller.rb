@@ -8,4 +8,11 @@ class Ps4Controller < ApplicationController
     type: "application/pdf"
   )
   end
+
+  def statemodel_pdf
+      send_file("#{Rails.root}/public/outputs/Calendarize_SD.pdf",
+    filename: "Calendarize_SD.pdf",
+    type: "application/pdf"
+  )
+  end
 end
