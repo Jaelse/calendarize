@@ -33,6 +33,11 @@ Example:
 
 <h3> Auditing the software</h3>
 Sensitive data in our site is SuperAdmin's email address and password. This willbe stored in a different table, initially seeded with one SuperAdmin. The password for this SuperAdmin will hashed and then stored in the table.Since the authentication of other users will be done by LDAP there is no need to store the password of these users. SSL is used in all the pages of the site which will keep thesession of any user secure.
+
+</br>
+<%= link_to "Data Model",  ps4_download_pdf_url %>
+</br>
+
 <h3> Referential Integrity</h3>
 The referential Integrity for our data model is:
  User - Secretary have one to many relationship.
