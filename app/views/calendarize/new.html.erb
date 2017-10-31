@@ -1,0 +1,86 @@
+<% if session[:user_type] == 'superadmin' && ( @add_type == 'student' || @add_type == 'faculty' || @add_type == 'secretary' || @add_type == 'department') %>
+  <h>Add new <%= @add_type%></h>
+  <%= form_tag create_path do %>
+    <% if @add_type == 'department'%>
+      <p>
+        <%= label_tag :department_name %><br />
+        <%= text_field_tag :department_name, params[:department_name], required: 'required' %>
+      </p>
+
+      <p>
+        <%= label_tag :school %><br />
+        <%= text_field_tag :school, params[:school], required: 'required' %>
+      </p>
+    <% else %>
+      <p>
+        <%= label_tag :username %><br />
+        <%= text_field_tag :username, params[:username], required: 'required' %>
+      </p>
+      <p>
+        <%= label_tag :email %><br />
+        <%= text_field_tag :email, params[:email], required: 'required' %>
+      </p>
+
+      <% if session[:user_type] == 'superadmin' %>
+      <p>
+        <%= label_tag :department %> <br />
+        <%= select_tag "Department",options_for_select(Department.select("deptname").distinct.collect{ |d| [d.deptname, d.deptname]}) %></br>
+      </p>
+      <% end %>
+      <% if @add_type == 'student'%>
+        <p>
+          <%= label_tag :field_of_study %><br />
+          <%= text_field_tag :field_of_study,nil, required: 'required' %>
+        </p>
+      <% end %>
+    <% end %>
+    <%= hidden_field_tag :add_type, @add_type %>
+    <p class="button"><%= submit_tag "Add #{@add_type}"%></p>
+  <% end %>
+<% elsif session[:user_type] == 'secretary' && ( @add_type == 'student' || @add_type == 'faculty' || @add_type == 'activity') %>
+  <h>Add new <%= @add_type%></h>
+  <%= form_tag create_path do %>
+    <% if @add_type == 'student' || @add_type == 'faculty' %>
+      <p>
+        <%= label_tag :username %><br />
+        <%= text_field_tag :username, params[:username], required: 'required' %>
+      </p>
+      <p>
+        <%= label_tag :email %><br />
+        <%= text_field_tag :email, params[:email], required: 'required' %>
+      </p>
+
+      <p>
+        <%= label_tag :department %><br />
+        <%= text_field_tag :department, (User.find_by( :uname => "#{session[:user_id]}").udept) ,disabled: true %>
+      </p>
+      <% if @add_type == 'student'%>
+        <p>
+          <%= label_tag :field_of_study %><br />
+          <%= text_field_tag :field_of_study,nil, required: 'required' %>
+        </p>
+      <% end %>
+
+      <%= hidden_field_tag :add_type, @add_type %>
+      <p class="button"><%= submit_tag "Add #{@add_type}"%></p>
+
+    <% elsif @add_type == 'activity' %>
+      <p>
+        <%= label_tag :activity_topic %><br />
+        <%= text_field_tag :activity_topic %>
+      </p>
+      <p>
+        <%= label_tag :activity_type %><br />
+        <%= select_tag :activity_type,options_for_select(ActivityType.select("acttypename").distinct.collect{ |d| [d.acttypename, d.acttypename]}) %></br>
+      </p>
+      <p>
+        <%= label_tag :activity_for %><br />
+        <%= text_field_tag :activity_for,nil, required: 'required', placeholder: 'student\'s id'  %>
+      </p>
+      <%= hidden_field_tag :add_type, @add_type %>
+      <p class="button"><%= submit_tag "Add #{@add_type}"%></p>
+    <% end %>
+  <% end %>
+<% else %>
+  <h> You don't belong here....</h>
+<% end %>

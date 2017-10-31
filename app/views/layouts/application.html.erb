@@ -9,9 +9,12 @@
   </head>
 
   <body>
+    <% flash.each do |name, msg| %>
+      <%= content_tag :div, msg, id: "flash_#{name}" %>
+    <% end %>
     <%= yield %>
     <footer>
-    <a href="http://validator.w3.org/check?uri=referer">XHTML Validator</a>  
+    <a href="http://validator.w3.org/check?uri=referer">XHTML Validator</a>
     </footer>
   </body>
 </html>

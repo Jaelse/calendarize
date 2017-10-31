@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
-  get 'calendarize/index'
+  get 'sessions/new', as: 'log_in'
+  get 'sessions/destroy', as: 'log_out'
+  get 'calendarize/index', as: 'index'
+  get 'calendarize/home', as: 'home'
+  get 'calendarize/new', as: 'new'
+  post 'calendarize/create', as: 'create'
 
-  get 'canlendarize/index'
-
-  get 'conlendarize/index'
+  resources :sessions
+  resources :calendarize
 
   get 'ps4/index'
   get 'ps4/download_pdf'
@@ -12,8 +16,8 @@ Rails.application.routes.draw do
   get 'ps3/fictious_user1' => 'ps3#fictious_user1'
   get 'ps3/fictious_user2' => 'ps3#fictious_user2'
   get 'ps3/fictious_user3' => 'ps3#fictious_user3'
-  get 'ps3/jenkins_output' => 'ps3#jenkins_output' 
-  get 'ps3/dump' => 'ps3#dump'  
+  get 'ps3/jenkins_output' => 'ps3#jenkins_output'
+  get 'ps3/dump' => 'ps3#dump'
 
   get 'ps1/index'
   get 'ps1/dividebyzero' => 'ps1#dividebyzero'
@@ -27,8 +31,8 @@ Rails.application.routes.draw do
   get 'ps2/sql_problem_set' => 'ps2#sql_problem_set'
   get 'ps2/sql_ps_doc' => 'ps2#sql_ps_doc'
   post 'ps2/import_quotations' => 'ps2#import_quotations'
-  
-  
+
+
   get 'problemsets/index'
 
   root :to => 'problemsets#index'

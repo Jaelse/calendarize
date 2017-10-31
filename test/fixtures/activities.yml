@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  acttopic: MyString
+  acttype: MyString
+  secretary: one
+
+two:
+  acttopic: MyString
+  acttype: MyString
+  secretary: two

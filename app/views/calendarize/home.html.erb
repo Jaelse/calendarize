@@ -1,0 +1,28 @@
+<% if current_user %>
+  Logged in as <% if session[:user_type] != 'superadmin' %> <%= current_user.uname %> <% else %> <%= current_user.suadusername %> <% end %>,
+  <%= link_to "Log out", log_out_path %>
+<% end %>
+</br>
+
+I am home!!!!
+</br></br>
+<% if session[:user_type] == 'superadmin' %>
+  <%= link_to "Add new secretary", new_path(type: "secretary") %></br>
+  <%= link_to "Add new department", new_path(type: "department") %></br>
+<% end %>
+
+
+<% if session[:user_type] == 'superadmin' || session[:user_type] == 'secretary' %>
+  <%= link_to "Add new faculty", new_path(type: "faculty") %></br>
+  <%= link_to "Add new student", new_path(type: "student") %></br>
+<% end %>
+
+<% if session[:user_type] == 'secretary' %>
+  <%= link_to "Create new activity", new_path(type: "activity") %></br>
+<% end %>
+
+
+<h3> Your Actvities </h3>
+ <% @activities.each do |act|%>
+  <%= act.acttopic%>
+ <%end%>
