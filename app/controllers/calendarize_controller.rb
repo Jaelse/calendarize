@@ -12,6 +12,14 @@ class CalendarizeController < ApplicationController
     end
   end
 
+  def show
+    @show_type = params[:type]
+    if @show_type == 'activity'
+      @show_data = Activity.find(params[:id])
+      @members = Member.where( activity_id: @show_data.id )
+    end
+  end
+
   def home
     #for showing activity
     if session[:user_type] == 'student'
@@ -75,6 +83,15 @@ class CalendarizeController < ApplicationController
         redirect_to home_path, :flash => { :notice => "Successfully created..."}
       else
         #put redirect_to to the same page
+      end
+    elsif params[:add_type] == "member" && session[:user_type] == 'secretary'
+      puts User.find_by( uname: params[:member]).id
+      puts params[:activity_id]
+
+      @member = Member.new( :user_id => User.find_by( uname: params[:member]).id, :activity_id => params[:activity_id])
+
+      if @member.save
+        puts 'done!!!!'
       end
     end
   end

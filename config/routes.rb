@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'calendarize/home', as: 'home'
   get 'calendarize/new', as: 'new'
   post 'calendarize/create', as: 'create'
-
+  get 'calendarize/show', as: 'show'
   resources :sessions
   resources :calendarize
 

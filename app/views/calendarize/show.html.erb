@@ -1,1 +1,17 @@
-<%= @show_type %>
+Show <%= @show_type %>
+
+members:
+
+<% @members.each do |member|%>
+ <%= member %></br>
+<%end%>
+
+<%= form_tag create_path do %>
+  <p>
+    <%= label_tag :add_member %>:
+    <%= text_field_tag :member,nil, placeholder: "username", required: "required"  %>
+    <%= hidden_field_tag :add_type, 'member' %>
+    <%= hidden_field_tag :activity_id, params[:id] %>
+    <%= submit_tag "Add member" %>
+  </p>
+<% end %>
