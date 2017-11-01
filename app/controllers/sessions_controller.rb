@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     else
       ldap = Net::LDAP.new
       ldap.host = "ldapserv.ait.ac.th"
-      ldap.port = 636
+      ldap.port = 389
       ldap.auth "uid=#{params[:username]},ou=people,dc=ait,dc=ac,dc=th", "#{params[:password]}"
       if ldap.bind
         if Secretary.exists?( :user_id => User.find_by( :uname => params[:username]).id )
