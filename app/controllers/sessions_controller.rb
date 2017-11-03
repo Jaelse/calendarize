@@ -34,6 +34,7 @@ class SessionsController < ApplicationController
             session[:user_id] = params[:username]
             session[:user_type] = 'faculty'
             redirect_to home_path
+          end  
         else
           redirect_to log_in_path, :flash => { :error => "You are a good person but not allowed to use this system right now !!!" }
         end
