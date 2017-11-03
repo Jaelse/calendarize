@@ -1,5 +1,8 @@
 class SessionsController < ApplicationController
-  def new  
+  def new
+    if session[:user_id]
+      redirect_to home_path
+    end
   end
 
   def create
