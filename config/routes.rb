@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'ps5/index'
+
+  get 'ps5/index'  
+
   get 'sessions/new', as: 'log_in'
   get 'sessions/destroy', as: 'log_out'
   get 'calendarize/index', as: 'index'

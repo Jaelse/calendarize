@@ -1,0 +1,96 @@
+<html>
+<head>
+ <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+</head>
+<body>
+<div class='container'>
+<h1>Problem set 5</h1>
+<h3>Types of Content:</h3>
+
+In our data model we have 3 types of content :: 
+<br><b>1. Activity :</b>
+
+<br>Moderation : Secretary who created that particular activity can only edit the activity.
+
+<br>Approval   : No approval needed
+
+<br>Versioning : No versioning required.
+
+<br><b>2. Comments:</b>
+
+<br>Moderation : We don't have edit option. But we have delete option, where the user who commented can only delete the comment.
+ 
+<br>Approval   : No approval required
+
+<br>Versioning : The timestamp of the comment posted will be the versioning.
+
+<br><b>3. Scheduling:</b>
+
+<br>Moderation : Only the faculty and secretary have the access to edit.
+
+<br>Approval   : Once the student confirms he is ready (such as ready for proposal) the scheduling process starts.
+
+<br>Versioning : No versioning required.
+<h3>User submitted Content:</h3>
+
+In our workflow we have 3 categories of user-submitted content i.e Comments, Activity and Scheduling. 
+
+<br><b>Activity :</b>
+Only Secretary has the privilage to create an activity. Secretary adds the members for the activity. Every activity will have sequence of meetings, where schedules of these meetings will be available in the site. Activity will have types(Thesis, Research, Project, Dissertation) The secretary can add a new activity type.
+
+<br><b>Comment :</b>
+Any user can post a comment for an activity but the user must be a member of that particular activity. Here the members of that activity can see the comments of others. There is no edit option in comments. But one can delete the comment of their own.
+
+<br><b>Scheduling :</b>
+The scheduling process strats when the student is ready for any meeting (example: proposal for thesis). Only faculty and secretary can edit the schedules. Scheduling can also have types (like proposal, presentation,defense, progress). Secretary can add a new type of scheduling.
+
+<h3>Workflow Design :</h3>
+
+In our workflow we have 3 content types and the workflow of each is:
+
+<br><b>1.Activity :</b>
+The activity is created by the secretary whenever the student ask for it. Each activity will consist of members, where members can be faculties and student. Every activity has the comments and scheduling option. Only the members in that activity will be able to post the comments and only faculty members can schedule the meetings. 
+
+<br><b>2.Comments :</b>
+Every activity consists of the comment option. Here any user can post the comment but the user has to be the member of that particular activity. But once the comment is posted it can't be edited instead we have the delete option where the user who posted it can only delete it. 
+
+<br><b>3.Scheduling :</b>
+we have scheduling for each activity created, but only the faculty and secretary can edit. The faculty can adjust their schedules. Faculty can give the priviliges to the secretary to edit their schedulings. 
+
+Our workflow design of the site is :
+
+<br>Superadmin can create and add secretaries,faculties and students.
+Firstly the user logs in by his ait account and after login success, the type of user who logged in will be (identified) like whether he is student, faculty or secretary. If the user is 
+
+<br><b>Secretary:</b> He/She can create an activity for the student of his own department whenever he is ready. The secretary can post the comment in the activity he created. He/she can edit the schedulings of the faculty whenever he is given the privileges. He/She can create a new type
+of scheduling and activity. 
+
+<br><b>Student:</b> Whenever the student is ready for any meeting. When he confirms for the meeting the scheduling process starts. For informing the faculties, it will be done by automated. The student can post the comments in his activity. He can only just see the scheduling done by the faculty.  
+
+<br><b>Faculty:</b>
+Whenever any faculty is added to an activity he will be receiving an automated mail. The faculty can post the comment and schedule their timings in the activity they are added to. Faculty can give the privilages to the secretary to adjust his schedulings. 
+
+<br>In scheduling if any changes are made any faculty, a notification mail will be sent to the other members of that particular activity. 
+
+<h3>Versioning:</h3>
+
+<br><b>Activity :</b>
+<br>Once activity is created, it will be referred with unique id there is no need to keep track of any changes done, as we will be referring only to the current
+ changes. example: when activity is created without name of the topic and then later when the topic is selected, only the current activity with the name is needed but not the old activity which was not having the name. 
+
+<br><b>Comments :</b>
+The timestamp of the comment posted will be the versioning.
+
+<br><b>Scheduling :</b>
+We dont need to keep track of the old schedules as when the schedule is changed we refer to the current schedule. 
+</div>
+</body>
+</html>
+
