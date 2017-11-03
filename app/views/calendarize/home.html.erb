@@ -21,8 +21,9 @@ I am home!!!!
   <%= link_to "Create new activity", new_path(type: "activity") %></br>
 <% end %>
 
-
-<h3> Your Actvities </h3>
- <% @activities.each do |act|%>
-  <%= link_to "#{act.acttopic}", show_path(type: "activity", id: "#{act.id}") %></br>
- <%end%>
+<% if !session[:user_type] == "superadmin" && !@activities.nil? %>
+  <h3> Your Actvities </h3>
+   <% @activities.each do |act|%>
+    <%= link_to "#{act.acttopic}", show_path(type: "activity", id: "#{act.id}") %></br>
+   <%end%>
+ <% end %>
