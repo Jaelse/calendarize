@@ -8,10 +8,17 @@ class SessionsController < ApplicationController
       session[:user_type] = "superadmin"
       redirect_to home_path
     else
-      ldap = Net::LDAP.new
-      ldap.host = "ldapserv.ait.ac.th"
-      ldap.port = 636
-      ldap.auth "uid=#{params[:username]},ou=people,dc=ait,dc=ac,dc=th", "#{params[:password]}"
+
+      ldap = Net::LDAP.new :host => "ldapserv.ait.ac.th",
+                          :port => 636,
+                          :auth => {
+                            :method=> :simple,
+                            :username => "uid=#{params[:username]},ou=people,dc=ait,dc=ac,dc=th",
+                            :password => "#{params[:password]}"},
+                            :encryption => { method: :simple_tls,
+                              tls_options: { :verify_mode => OpenSSL::SSL::VERIFY_NONE}
+                            }
+                            
       if ldap.bind
         if Secretary.exists?( :user_id => User.find_by( :uname => params[:username]).id )
           session[:user_id] = params[:username]
