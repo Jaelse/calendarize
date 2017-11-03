@@ -48,13 +48,14 @@ class CalendarizeController < ApplicationController
       #do faculty
     elsif params[:add_type] == "student" && ( session[:user_type] == 'superadmin' || session[:user_type] == 'secretary' )
       @user = User.new( :uname => params[:username], :uemail => params[:email], :udept => params[:department])
+      puts params[:email]
+      puts params[:department]
       if @user.save
-        @student = Student.new( :user_id => User.find_by(uname: @user.uname).id, :fos => params[:field_of_study] )
+        @student = Student.new( :user_id => User.find_by( uname: @user.uname).id, :fos => params[:field_of_study] )
         if @student.save
-          redirect_to home_path , :flash => { :error => "Invalid username or password!" }
+          redirect_to home_path , :flash => { :error => "Successfully created..." }
         end
       end
-      redirect_to home_path
     elsif params[:add_type] == "department" && session[:user_type] == 'superadmin'
       @department = Department.new( :deptname => params[:department_name].downcase, :deptschool => params[:school].downcase)
 

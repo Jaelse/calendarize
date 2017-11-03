@@ -1,8 +1,8 @@
 <% if session[:user_type] == 'superadmin' && ( @add_type == 'student' || @add_type == 'faculty' || @add_type == 'secretary' || @add_type == 'department') %>
   <h>Add new <%= @add_type%></h>
   <%= form_tag create_path do %>
-    <% if @add_type == 'department'%>
       <p>
+        <% if @add_type == 'department'%>
         <%= label_tag :department_name %><br />
         <%= text_field_tag :department_name, params[:department_name], required: 'required' %>
       </p>
@@ -52,7 +52,7 @@
 
       <p>
         <%= label_tag :department %><br />
-        <%= text_field_tag :department, (User.find_by( :uname => "#{session[:user_id]}").udept) ,disabled: true %>
+        <%= text_field_tag :department,  User.find_by( :uname => "#{session[:user_id]}").udept , readonly: true %>
       </p>
       <% if @add_type == 'student'%>
         <p>
