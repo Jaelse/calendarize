@@ -18,22 +18,26 @@ class SessionsController < ApplicationController
                             :encryption => { method: :simple_tls,
                               tls_options: { :verify_mode => OpenSSL::SSL::VERIFY_NONE}
                             }
-                            
       if ldap.bind
-        if Secretary.exists?( :user_id => User.find_by( :uname => params[:username]).id )
-          session[:user_id] = params[:username]
-          session[:user_type] = 'secretary'
-          redirect_to home_path
-        elsif Student.exists?( :user_id => User.find_by( :uname => params[:username]).id )
-          session[:user_id] = params[:username]
-          session[:user_type] = 'student'
-          redirect_to home_path
-        elsif Faculty.exists?( :user_id => User.find_by( :uname => params[:username]).id )
-          session[:user_id] = params[:username]
-          session[:user_type] = 'faculty'
-          redirect_to home_path
+        @user = User.find_by( :uname => params[:username])
+        if !@user.blank?
+          if Secretary.exists?( :user_id => @user.id )
+            session[:user_id] = params[:username]
+            session[:user_type] = 'secretary'
+            redirect_to home_path
+          elsif Student.exists?( :user_id => @user.id )
+            session[:user_id] = params[:username]
+            session[:user_type] = 'student'
+            redirect_to home_path
+          elsif Faculty.exists?( :user_id => @user.id )
+            session[:user_id] = params[:username]
+            session[:user_type] = 'faculty'
+            redirect_to home_path
+          else
+            redirect_to home_path, :flash => { :error => "You are a good person but not allowed to use this system right now !!!" }
+          end
         else
-          redirect_to home_path, :flash => { :error => "You are a good person but not allowed to use this system right now !!!" }
+          redirect_to log_in_path, :flash => { :error => "You are a good person but not allowed to use this system right now !!!" }
         end
       else
         redirect_to log_in_path, :flash => { :error => "Invalid username or password!" }
