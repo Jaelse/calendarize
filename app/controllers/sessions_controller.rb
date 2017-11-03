@@ -1,9 +1,5 @@
 class SessionsController < ApplicationController
-  def new
-    @su = Superadmin.new( :suadusername => "superman", :suadpassword => "superpower5$3@1")
-    if @su.save
-      redirect_to index_path
-    end  
+  def new  
   end
 
   def create
