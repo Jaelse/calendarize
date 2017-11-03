@@ -1,7 +1,7 @@
 class CalendarizeController < ApplicationController
   helper_method :current_user
-  before_action :get_departments, only: [:new]
   before_action :require_login, except: [:index]
+  before_action :get_departments, only: [:new]
   def new
     @add_type = params[:type]
   end
@@ -17,6 +17,8 @@ class CalendarizeController < ApplicationController
     if @show_type == 'activity'
       @show_data = Activity.find(params[:id])
       @members = Member.where( activity_id: @show_data.id )
+    elsif @show_type == 'department'
+      @show_data = department.find(params[:id])
     end
   end
 
@@ -24,7 +26,6 @@ class CalendarizeController < ApplicationController
     #for showing activity
     if session[:user_type] == 'student'
       @activities = Activity.where( user_id: User.find_by( uname: session[:user_id]).id)
-      puts @activities
     elsif session[:user_type] == 'faculty'
       #do it for faculty ..........asdf.asdf.asdf.asdf.f.f.f.f.f.f.f.f.f.f.f. blah blah blah
     elsif session[:user_type] == 'secretary'
@@ -33,12 +34,12 @@ class CalendarizeController < ApplicationController
   end
 
   def create
-    if params[:add_type] == "secretary" && ( session[:user_type] == 'superadmin' || session[:user_type] == 'secretary' )
+    if params[:add_type] == "secretary" && ( session[:user_type] == 'superadmin' )
       @user = User.new( :uname => params[:username], :uemail => params[:email], :udept => params[:department])
       if @user.save
         @secretary = Secretary.new( :user_id => User.find_by(uname: @user.uname).id )
         if @secretary.save
-          redirect_to home_path , :flash => { :error => "Invalid username or password!"}
+          redirect_to home_path , :flash => { :error => "Successfully created..."}
         end
       end
       #later put an escape out  when user already exists and someone is trying to insert again
@@ -55,7 +56,8 @@ class CalendarizeController < ApplicationController
       end
       redirect_to home_path
     elsif params[:add_type] == "department" && session[:user_type] == 'superadmin'
-      @department = Department.new( :deptname => params[:department_name], :deptschool => params[:school])
+      @department = Department.new( :deptname => params[:department_name].downcase, :deptschool => params[:school].downcase)
+
       if @department.save
         redirect_to home_path, :flash => { :notice => "Successfully created..." }
       else

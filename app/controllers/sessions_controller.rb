@@ -1,11 +1,10 @@
 class SessionsController < ApplicationController
+  before_action :check_session, only: [:new, :create]
   def new
-    if session[:user_id]
-      redirect_to home_path
-    end
   end
 
   def create
+
     if Superadmin.authenticate(params[:username], params[:password])
       session[:user_id] = params[:username]
       session[:user_type] = "superadmin"
@@ -51,4 +50,11 @@ class SessionsController < ApplicationController
     session[:user_type] = nil
     redirect_to index_path
   end
+
+  private
+    def check_session
+      if session[:user_id]
+        redirect_to home_path, :flash => { :notice => "Already logged in" }
+      end
+    end
 end
