@@ -1,26 +1,47 @@
-Show <%= @show_type %><br />
-<% if params[:show_type] == "activity"%>
-<div id="members">
-  Members<br />
-  <% @members.each do |member|%>
-   <%= member.uname %>:</br>
-  <%end%>
+<div class="title-container">
+  <h1>Show <%= @show_type %></h1>
 </div>
+<% if params[:show_type] == "activity"%>
+<div class="thumbnail">
+  <div id="members">
+    <h4>Members</h4>
+    <% @members.each do |member|%>
+      <div class="thumbnail">
+        <%= member.uname %></br>
+      </div>
+    <%end%>
+  </div>
   <% if session[:user_type] == "secretary"%>
       <%= form_tag create_path, remote: true do %>
-        <p>
+        <div class="form-group">
           <%= label_tag :add_member %>:
-          <%= text_field_tag :member,nil, data: { autocomplete_source: user_list_path }, placeholder: "username", required: "required"  %>
+          <%= text_field_tag :member,nil, class:"form-control", data: { autocomplete_source: user_list_path }, placeholder: "username", required: "required"  %>
           <%= hidden_field_tag :add_type, 'member' %>
-          <%= hidden_field_tag :activity_id, params[:id] %>
-          <%= submit_tag "Add member" %>
-        </p>
+          <%= hidden_field_tag :activity_id, params[:id] %><br />
+          <%= submit_tag "Add member", class: "btn btn-info" %>
+        </div>
       <% end %>
   <% end %>
-Schedules:<br /><br />
-<div id="schedules">
-
 </div>
+<div class="thumbnail">
+  <h4>Schedules</h3>
+  <div id="schedules">
+    <% @meetings.each do |meeting| %>
+      <div class="thumbnail">
+        <%= meeting.schname %>
+        <% if meeting.schstart %>
+          <%= button_tag "schedule", id: "meeting#{meeting.id}",class: "btn btn-info",remote: true %>
+        <% end %>
+          <% if session[:user_type] == "student" && !meeting.schstart%>
+            <%= form_tag edit_path, remote: true  do%>
+              <%= hidden_field_tag :edit_type, "start_meeting" %>
+              <%= hidden_field_tag :meeting_id, meeting.id %>
+              <%= submit_tag "Start scheduling", id: "submit#{meeting.id}", class: "btn btn-info" %>
+            <% end%>
+          <% end %>
+        </div>
+    <% end %>
+  </div>
 <div id='newmeetingform' hidden="true" >
   <%= form_tag create_path, remote: true do%>
     <%= label_tag :meeting_name %>:
@@ -29,36 +50,44 @@ Schedules:<br /><br />
     <%= date_select :schdate, nil, :start_year => Date.today.year, :end_year => Date.today.year + 10 %>
     <%= hidden_field_tag :add_type, 'meeting' %>
     <%= hidden_field_tag :activity_id, params[:id] %>
-    <%= submit_tag 'Create meeting' %>
+    <%= submit_tag 'Create meeting', class: "btn btn-info" %>
   <% end %>
 </div>
 <% if session[:user_type] == "secretary"%>
-  <%= link_to "Add new meeting", nil, id: "meeting_form_link",remote: true %><br /><br />
+  <%= link_to "Add new meeting", nil, id: "meeting_form_link",class: "btn btn-link",remote: true %><br /><br />
 <% end %>
-Comments:<br /><br />
-<div id="comments">
-  <% @comments.each do |comment| %>
-    <%= content_tag :div, class: "comments", id: "comment#{comment.id}" do %>
-      <strong><%= User.find(comment.user_id).uname %></strong>
-        : <%= comment.comment %><br />
-        <% if comment.user_id == User.find_by( uname: session[:user_id]).id%>
-          <%= link_to "Delete", delete_path( :delete_type => "comment", :id => "#{comment.id}"), remote: true  %>
-        <% end %><br /> <br />
+
+</div>
+<div class="thumbnail">
+  <h4>Comments</h4>
+  <div id="comments">
+    <% @comments.each do |comment| %>
+          <%= content_tag :div, class: "comments", id: "comment#{comment.id}" do %>
+          <blockquote>
+            <p><%= comment.comment %></p>
+            <footer><%= User.find(comment.user_id).uname %></footer>
+              <% if comment.user_id == User.find_by( uname: session[:user_id]).id%>
+                <footer><%= link_to "Delete", delete_path( :delete_type => "comment", :id => "#{comment.id}"), class: "btn btn-link", remote: true  %></footer>
+              <% end %>
+          <% end %>
+    <% end %>
+  </div>
+  <% if Member.exists?( activity_id: params[:id], user_id: User.find_by( uname: session[:user_id]).id ) || Activity.exists?( user_id: User.find_by( uname: session[:user_id]).id ) %>
+    <%= form_tag create_path, remote: true do %>
+      <div class=<"form-group">
+        <%= text_area_tag :comment,nil, class: "form-control", placeholder: "write your comment here...", required: "required"  %>
+        <%= hidden_field_tag :add_type, 'comment' %>
+        <%= hidden_field_tag :activity_id, params[:id] %><br />
+        <%= submit_tag "Comment", class: "btn btn-success" %>
+        <br />
+      </div>
     <% end %>
   <% end %>
 </div>
-<% if Member.exists?( activity_id: params[:id], user_id: User.find_by( uname: session[:user_id]).id ) || Activity.exists?( user_id: User.find_by( uname: session[:user_id]).id ) %>
-  <%= form_tag create_path, remote: true do %>
-    <p>
-      <%= text_area_tag :comment,nil, placeholder: "write your comment here...", required: "required"  %>
-      <%= hidden_field_tag :add_type, 'comment' %>
-      <%= hidden_field_tag :activity_id, params[:id] %>
-      <%= submit_tag "Comment" %>
-    </p>
-  <% end %>
-<% end %>
+</div>
+
 <% elsif params[:show_type] == "department"%>
-  Department Name: <%= @show_data.deptname %><br />
+  <div class="form-group">Department Name: <%= @show_data.deptname %><br /></div>
   School: <%= @show_data.deptschool %>
 <% elsif params[:show_type] == "student"%>
     Student's Username: <%= @show_data.uname %><br />

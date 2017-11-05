@@ -1,5 +1,5 @@
 class CalendarizeController < ApplicationController
-  helper_method :current_user
+  #helper_method :current_user
   before_action :require_login, except: [:index]
   before_action :get_departments, only: [:new]
 
@@ -22,6 +22,7 @@ class CalendarizeController < ApplicationController
 
       @comments = Comment.where( activity_id: @show_data.id)
 
+      @meetings = Schedule.where(activity_id: @show_data.id)
     elsif @show_type == 'department'
       @show_data = Department.find_by( deptname: params[:deptname] )
     elsif @show_type == 'student'
@@ -142,6 +143,17 @@ class CalendarizeController < ApplicationController
     end
   end
 
+  def edit
+    if params[:edit_type] == 'start_meeting'
+      @meeting = Schedule.find(params[:meeting_id])
+      @meeting.schstart = true
+      respond_to do |format|
+        if @meeting.save
+          format.js
+        end
+      end
+    end
+  end
   def delete
     if params[:delete_type] == "comment" && session[:user_id] == User.find( Comment.find(params[:id]).user_id ).uname
       Comment.delete(params[:id])
@@ -162,12 +174,12 @@ class CalendarizeController < ApplicationController
     end
   end
 
-  private
-    def current_user
-      if Superadmin.exists?( :suadusername => session[:user_id] )
-          @current_user ||= Superadmin.find_by( :suadusername => session[:user_id]) if session[:user_id]
-      else
-          @current_user ||= User.find_by(:uname => session[:user_id]) if session[:user_id]
-      end
-    end
+  # private
+  #   def current_user
+  #     if Superadmin.exists?( :suadusername => session[:user_id] )
+  #         @current_user ||= Superadmin.find_by( :suadusername => session[:user_id]) if session[:user_id]
+  #     else
+  #         @current_user ||= User.find_by(:uname => session[:user_id]) if session[:user_id]
+  #     end
+  #   end
 end

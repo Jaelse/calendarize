@@ -14,5 +14,5 @@ jQuery(document).on('turbolinks:load',->
   $("#meeting_form_link").click(->
     $('#newmeetingform').removeAttr("hidden");
     $('#meeting_form_link').attr("hidden",true);
-  )
+  ) 
 )

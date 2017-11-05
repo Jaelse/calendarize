@@ -9,7 +9,7 @@
 <% end %>
 
 <% if params[:schdate].present? %>
-  $("#schedules").append("<%= Schedule.find_by( schname: params[:meeting_name]).schdate %><br />");
+  $("#schedules").append("<div class='thumbnail'><%= Schedule.find_by( schname: params[:meeting_name]).schname %></div>");
   $("#newmeetingform").attr("hidden", true);
   $("#meeting_form_link").attr("hidden", false);
 <% end %>

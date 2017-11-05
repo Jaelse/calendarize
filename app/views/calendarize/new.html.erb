@@ -1,86 +1,90 @@
+<div class="thumbnail new">
 <% if session[:user_type] == 'superadmin' && ( @add_type == 'student' || @add_type == 'faculty' || @add_type == 'secretary' || @add_type == 'department') %>
-  <h>Add new <%= @add_type%></h>
-  <%= form_tag create_path do %>
-      <p>
-        <% if @add_type == 'department'%>
-        <%= label_tag :department_name %><br />
-        <%= text_field_tag :department_name, params[:department_name], required: 'required' %>
-      </p>
-
-      <p>
-        <%= label_tag :school %><br />
-        <%= text_field_tag :school, params[:school], required: 'required' %>
-      </p>
-    <% else %>
-      <p>
-        <%= label_tag :username %><br />
-        <%= text_field_tag :username, params[:username], required: 'required' %>
-      </p>
-      <p>
-        <%= label_tag :email %><br />
-        <%= text_field_tag :email, params[:email], required: 'required' %>
-      </p>
-
-      <% if session[:user_type] == 'superadmin' %>
-      <p>
-        <%= label_tag :department %> <br />
-        <%= select_tag :department ,options_for_select(Department.select("deptname").distinct.collect{ |d| [d.deptname, d.deptname]}) %></br>
-      </p>
-      <% end %>
-      <% if @add_type == 'student'%>
+  <div class="title-container">
+    <h3>Add new <%= @add_type%></h3>
+  </div>
+    <%= form_tag create_path do %>
         <p>
-          <%= label_tag :field_of_study %><br />
-          <%= text_field_tag :field_of_study,nil, required: 'required' %>
+          <% if @add_type == 'department'%>
+          <%= label_tag :department_name %>:
+          <%= text_field_tag :department_name, params[:department_name], required: 'required' %>
         </p>
+
+        <p>
+          <%= label_tag :school %>:
+          <%= text_field_tag :school, params[:school], required: 'required' %>
+        </p>
+      <% else %>
+        <p>
+          <%= label_tag :username %>:
+          <%= text_field_tag :username, params[:username], required: 'required' %>
+        </p>
+        <p>
+          <%= label_tag :email %>:
+          <%= text_field_tag :email, params[:email], required: 'required' %>
+        </p>
+
+        <% if session[:user_type] == 'superadmin' %>
+        <p>
+          <%= label_tag :department %>:
+          <%= select_tag :department ,options_for_select(Department.select("deptname").distinct.collect{ |d| [d.deptname, d.deptname]}) %></br>
+        </p>
+        <% end %>
+        <% if @add_type == 'student'%>
+          <p>
+            <%= label_tag :field_of_study %>:
+            <%= text_field_tag :field_of_study,nil, required: 'required' %>
+          </p>
+        <% end %>
+      <% end %>
+      <%= hidden_field_tag :add_type, @add_type %>
+      <p class="button"><%= submit_tag "Add #{@add_type}", class: "btn btn-primary"%></p>
+    <% end %>
+  <% elsif session[:user_type] == 'secretary' && ( @add_type == 'student' || @add_type == 'faculty' || @add_type == 'activity') %>
+    <div class="title-container"><h3>Add new <%= @add_type%></h3></div>
+    <%= form_tag create_path do %>
+      <% if @add_type == 'student' || @add_type == 'faculty' %>
+        <div class="form-group">
+          <%= label_tag :username %>:
+          <%= text_field_tag :username, params[:username], required: 'required' %>
+        </div>
+        <div class="form=group">
+          <%= label_tag :email %>:
+          <%= text_field_tag :email, params[:email], required: 'required' %>
+        </div>
+
+        <div class="form-group">
+          <%= label_tag :department %>:
+          <%= text_field_tag :department,  User.find_by( :uname => "#{session[:user_id]}").udept , readonly: true %>
+        </div>
+        <% if @add_type == 'student'%>
+          <div class="form-group">
+            <%= label_tag :field_of_study %>:
+            <%= text_field_tag :field_of_study,nil, required: 'required' %>
+          </div>
+        <% end %>
+
+        <%= hidden_field_tag :add_type, @add_type %>
+        <div class="form-group"><%= submit_tag "Add #{@add_type}", class: "btn btn-primary"%></div>
+
+      <% elsif @add_type == 'activity' %>
+        <p>
+          <%= label_tag :activity_topic %>:
+          <%= text_field_tag :activity_topic %>
+        </p>
+        <p>
+          <%= label_tag :activity_for %>:
+          <%= text_field_tag :activity_for, nil, data: { autocomplete_source: user_list_path }, required: 'required', placeholder: 'student\'s id'  %>
+        </p>
+        <p>
+          <%= label_tag :activity_type %>:
+          <%= text_field_tag :activity_type,nil, data: { autocomplete_source: ActivityType.order(:acttypename).map(&:acttypename)}, required: 'required' %></br>
+        </p>
+        <%= hidden_field_tag :add_type, @add_type %>
+        <p class="button"><%= submit_tag "Add #{@add_type}", class: "btn btn-primary"%></p>
       <% end %>
     <% end %>
-    <%= hidden_field_tag :add_type, @add_type %>
-    <p class="button"><%= submit_tag "Add #{@add_type}"%></p>
+  <% else %>
+    <h> You don't belong here....</h>
   <% end %>
-<% elsif session[:user_type] == 'secretary' && ( @add_type == 'student' || @add_type == 'faculty' || @add_type == 'activity') %>
-  <h>Add new <%= @add_type%></h>
-  <%= form_tag create_path do %>
-    <% if @add_type == 'student' || @add_type == 'faculty' %>
-      <p>
-        <%= label_tag :username %><br />
-        <%= text_field_tag :username, params[:username], required: 'required' %>
-      </p>
-      <p>
-        <%= label_tag :email %><br />
-        <%= text_field_tag :email, params[:email], required: 'required' %>
-      </p>
-
-      <p>
-        <%= label_tag :department %><br />
-        <%= text_field_tag :department,  User.find_by( :uname => "#{session[:user_id]}").udept , readonly: true %>
-      </p>
-      <% if @add_type == 'student'%>
-        <p>
-          <%= label_tag :field_of_study %><br />
-          <%= text_field_tag :field_of_study,nil, required: 'required' %>
-        </p>
-      <% end %>
-
-      <%= hidden_field_tag :add_type, @add_type %>
-      <p class="button"><%= submit_tag "Add #{@add_type}"%></p>
-
-    <% elsif @add_type == 'activity' %>
-      <p>
-        <%= label_tag :activity_topic %><br />
-        <%= text_field_tag :activity_topic %>
-      </p>
-      <p>
-        <%= label_tag :activity_for %><br />
-        <%= text_field_tag :activity_for, nil, data: { autocomplete_source: user_list_path }, required: 'required', placeholder: 'student\'s id'  %>
-      </p>
-      <p>
-        <%= label_tag :activity_type %><br />
-        <%= text_field_tag :activity_type,nil, data: { autocomplete_source: ActivityType.order(:acttypename).map(&:acttypename)}, required: 'required' %></br>
-      </p>
-      <%= hidden_field_tag :add_type, @add_type %>
-      <p class="button"><%= submit_tag "Add #{@add_type}"%></p>
-    <% end %>
-  <% end %>
-<% else %>
-  <h> You don't belong here....</h>
-<% end %>
+</div>

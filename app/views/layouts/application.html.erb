@@ -1,19 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Web17-08</title>
       <%= csrf_meta_tags %>
       <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
       <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+      <meta name="viewport" content="width=devise-width, initial-scale=1">
   </head>
 
   <body>
-    <% flash.each do |name, msg| %>
-      <%= content_tag :div, msg, id: "flash_#{name}" %>
-    <% end %>
-    <%= yield %>
-    <footer>
-    <a href="http://validator.w3.org/check?uri=referer">XHTML Validator</a>
-    </footer>
+      <header class="container">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <%= link_to "Calendarize", root_path, class: "navbar-brand" %>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+              <% if !current_user %>
+                <li> <%= link_to "Log in", log_in_path %></li>
+              <% else %>
+                <li> <%= link_to "Log out", log_out_path %></li>
+              <% end %>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <section class="container">
+        <div id="flash">
+          <% flash.each do |name, msg| %>
+            <div class="flash alert <%= alert_class(name) %>"><%= msg %> </div>
+          <% end %>
+        </div>
+        <%= yield %>
+      </section>
+      <footer class="footer">
+        <a href="http://validator.w3.org/check?uri=referer">XHTML Validator</a>
+      </footer>
   </body>
 </html>

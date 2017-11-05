@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   post 'calendarize/create', as: 'create'
   get 'calendarize/show', as: 'show'
   get 'calendarize/delete', as: 'delete'
+  post 'calendarize/edit', as: 'edit'
 
   get 'user_list/index', as: 'user_list'
 
@@ -44,6 +45,6 @@ Rails.application.routes.draw do
 
   get 'problemsets/index'
 
-  root :to => 'problemsets#index'
+  root :to => 'calendarize#index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
