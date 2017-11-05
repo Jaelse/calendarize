@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  schname: MyString
+  schdate: 2017-11-05 17:38:57
+  schstart: false
+  schfinished: false
+  schdeadline: 2017-11-05 17:38:57
+  activity: one
+
+two:
+  schname: MyString
+  schdate: 2017-11-05 17:38:57
+  schstart: false
+  schfinished: false
+  schdeadline: 2017-11-05 17:38:57
+  activity: two

@@ -1,0 +1,7 @@
+<% if params[:delete_type] == "comment" %>
+  id = "comment"+<%= params[:id]%>;
+  alert(id)
+  comment = document.getElementById(id);
+
+  comment.remove();
+<% end %>

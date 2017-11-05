@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get 'ps5/index'
 
-  get 'ps5/index'  
+  get 'ps5/index'
 
   get 'sessions/new', as: 'log_in'
   get 'sessions/destroy', as: 'log_out'
@@ -10,8 +10,13 @@ Rails.application.routes.draw do
   get 'calendarize/new', as: 'new'
   post 'calendarize/create', as: 'create'
   get 'calendarize/show', as: 'show'
+  get 'calendarize/delete', as: 'delete'
+
+  get 'user_list/index', as: 'user_list'
+
   resources :sessions
   resources :calendarize
+
 
   get 'ps4/index'
   get 'ps4/download_pdf'

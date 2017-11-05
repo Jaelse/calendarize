@@ -70,12 +70,12 @@
         <%= text_field_tag :activity_topic %>
       </p>
       <p>
-        <%= label_tag :activity_type %><br />
-        <%= select_tag :activity_type,options_for_select(ActivityType.select("acttypename").distinct.collect{ |d| [d.acttypename, d.acttypename]}) %></br>
+        <%= label_tag :activity_for %><br />
+        <%= text_field_tag :activity_for, nil, data: { autocomplete_source: user_list_path }, required: 'required', placeholder: 'student\'s id'  %>
       </p>
       <p>
-        <%= label_tag :activity_for %><br />
-        <%= text_field_tag :activity_for,nil, required: 'required', placeholder: 'student\'s id'  %>
+        <%= label_tag :activity_type %><br />
+        <%= text_field_tag :activity_type,nil, data: { autocomplete_source: ActivityType.order(:acttypename).map(&:acttypename)}, required: 'required' %></br>
       </p>
       <%= hidden_field_tag :add_type, @add_type %>
       <p class="button"><%= submit_tag "Add #{@add_type}"%></p>

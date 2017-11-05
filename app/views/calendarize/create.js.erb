@@ -1,0 +1,15 @@
+<% if params[:member].present? %>
+  $("#members").append("<%= User.find_by( uname: params[:member]).uname %><br />");
+  $("#members").attr("placeholder","username");
+<% end %>
+
+<% if params[:comment].present? %>
+  $("#comments").append("<%= Comment.find_by( comment: params[:comment]).comment %><br />");
+  $("#comments").attr("placeholder", "write your comment here...");
+<% end %>
+
+<% if params[:schdate].present? %>
+  $("#schedules").append("<%= Schedule.find_by( schname: params[:meeting_name]).schdate %><br />");
+  $("#newmeetingform").attr("hidden", true);
+  $("#meeting_form_link").attr("hidden", false);
+<% end %>

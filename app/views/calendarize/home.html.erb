@@ -19,11 +19,17 @@ I am home!!!!
 
 <% if session[:user_type] == 'secretary' %>
   <%= link_to "Create new activity", new_path(type: "activity") %></br>
+  <%= link_to "See all students", show_path(type: "allstudents") %></br>
+  <%= link_to "See all faculty", show_path( show_type: "allfaculty") %></br>
 <% end %>
 
-<% if !session[:user_type] == "superadmin" && !@activities.nil? %>
-  <h3> Your Actvities </h3>
+<% if session[:user_type] != "superadmin" && !@activities.nil? %>
+  <h3>Your Actvities</h3>
+  <ul>
    <% @activities.each do |act|%>
-    <%= link_to "#{act.acttopic}", show_path(type: "activity", id: "#{act.id}") %></br>
+    <li>
+      <%= link_to "#{act.acttopic}", show_path(show_type: "activity", id: "#{act.id}") %></br>
+    </li>
    <%end%>
+ </ul>
  <% end %>
