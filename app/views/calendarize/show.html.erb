@@ -13,7 +13,7 @@
   </div>
   <% if session[:user_type] == "secretary"%>
       <%= form_tag create_path, remote: true do %>
-        <div class="form-group">
+        <div id="add_member" class="form-group">
           <%= label_tag :add_member %>:
           <%= text_field_tag :member,nil, class:"form-control", data: { autocomplete_source: user_list_path }, placeholder: "username", required: "required"  %>
           <%= hidden_field_tag :add_type, 'member' %>
@@ -77,7 +77,7 @@
     Activity.exists?( id: params[:id], secretary_id: Secretary.find_by( user_id: User.find_by( uname: session[:user_id]).id).id) %>
     <%= form_tag create_path, remote: true do %>
       <div class=<"form-group">
-        <%= text_area_tag :comment,nil, class: "form-control", placeholder: "write your comment here...", required: "required"  %>
+        <%= text_area_tag :comment,nil, class: "form-control", id: "comment_box", placeholder: "write your comment here...", required: "required"  %>
         <%= hidden_field_tag :add_type, 'comment' %>
         <%= hidden_field_tag :activity_id, params[:id] %><br />
         <%= submit_tag "Comment", class: "btn btn-success" %>

@@ -4,9 +4,11 @@
 <% end %>
 
 <% if params[:comment].present? %>
-  alert("asf")
-  $("#comments").append("<%= Comment.find_by( comment: params[:comment]).comment %><br />");
-  $("#comments").attr("placeholder", "write your comment here...");
+  var comment_part = "<%= j(params[:comment])%>";
+  var user_part = "<%= j(session[:user_id])%>";
+  var link_to_delete = "<%= j(link_to 'Delete', delete_path( :delete_type => 'comment', :id => '#{@comment.id}'), class: 'btn btn-link', remote: true) %>"
+  $("#comments").append("<blockquote><p>"+ comment_part +"</p><footer>"+ user_part +"</footer><footer>"+ link_to_delete +"</footer>");
+  $("#comment_box").val('');
 <% end %>
 
 <% if params[:schdate].present? %>
