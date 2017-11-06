@@ -24,7 +24,7 @@ class CalendarizeController < ApplicationController
 
       @meetings = Schedule.where(activity_id: @show_data.id)
     elsif @show_type == 'department'
-      @show_data = Department.find_by( deptname: params[:deptname] )
+      @show_data = Department.find( params[:deptid] )
     elsif @show_type == 'student'
       @show_data = User.find_by( uname: params[:uname])
       @student_data = Student.find_by( user_id: @show_data.id)
@@ -76,7 +76,7 @@ class CalendarizeController < ApplicationController
       if @user.save
         @student = Student.new( :user_id => User.find_by( uname: @user.uname).id, :fos => params[:field_of_study] )
         if @student.save
-          redirect_to show_path( :show_type => params[:add_type], :uname => params[:username]) , :flash => { :error => "Successfully created..." }
+          redirect_to show_path( :show_type => params[:add_type], :uname => params[:username]) , :flash => { :notice => "Successfully created..." }
         end
       elsif User.exists?( :uname => params[:username])
         redirect_to new_path( :type => params[:add_type]), :flash => {:error => "User Already exists"}
@@ -85,7 +85,7 @@ class CalendarizeController < ApplicationController
       @department = Department.new( :deptname => params[:department_name].downcase, :deptschool => params[:school].downcase)
 
       if @department.save
-        redirect_to show_path( :show_type => params[:add_type], :deptname =>  params[:department_name].downcase), :flash => { :notice => "Successfully created..." }
+        redirect_to show_path( :show_type => params[:add_type], :deptid =>  @department.id), :flash => { :notice => "Successfully created..." }
       elsif Department.exists?( :deptname => params[:department_name].downcase)
         redirect_to new_path( :type => params[:add_type]), :flash => { :error => "department already exsits..." }
       end
@@ -101,7 +101,7 @@ class CalendarizeController < ApplicationController
       @sec_user_id = User.find_by(uname: session[:user_id]).id
       @secretary = Secretary.find_by(user_id: @sec_user_id)
 
-      ActivityType.find_or_create_by_acttypename(params[:activity_type].downcase) if params[:activity_type].present?
+      ActivityType.find_or_create_by( acttypename: params[:activity_type].downcase) if params[:activity_type].present?
 
       @activity = Activity.new(
                   :acttopic => @acttopic,
@@ -152,6 +152,16 @@ class CalendarizeController < ApplicationController
           format.js
         end
       end
+    elsif params[:edit_type] == 'student'
+
+    elsif params[:edit_type] == 'faculty'
+
+    elsif params[:edit_type] == 'secretary'
+
+    elsif params[:edit_type] == 'student'
+
+    elsif params[:edit_type] == 'department'
+
     end
   end
   def delete

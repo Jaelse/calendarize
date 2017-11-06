@@ -4,6 +4,7 @@
 <% end %>
 
 <% if params[:comment].present? %>
+  alert("asf")
   $("#comments").append("<%= Comment.find_by( comment: params[:comment]).comment %><br />");
   $("#comments").attr("placeholder", "write your comment here...");
 <% end %>

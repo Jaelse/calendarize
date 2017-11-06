@@ -1,11 +1,15 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
-
-
-.footer {
-  position: absolute;
+html, body{
+  height: 100%;
+}
+.push{
+  margin-top: 48rem;
+}
+.footer{
+  position: relative;
   right: 0;
-  bottom: 0;
+  bottom: 0px;
   left: 0;
   padding: 1rem;
   background-color: #efefef;

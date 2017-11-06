@@ -1,32 +1,38 @@
-<div class="thumbnail">
-  <ul class="list-inline">
-    <% if session[:user_type] == 'superadmin' %>
-      <li><%= link_to "Add new secretary", new_path(type: "secretary"),class: "btn btn-link" %></li>
-      <li><%= link_to "Add new department", new_path(type: "department"),class: "btn btn-link" %></li>
-    <% end %>
+<% if session[:user_type] == 'superadmin' || session[:user_type] == 'secretary'%>
+  <div class="thumbnail">
+    <ul class="list-inline">
+      <% if session[:user_type] == 'superadmin' %>
+        <li><%= link_to "Add new secretary", new_path(type: "secretary"),class: "btn btn-link" %></li>
+        <li><%= link_to "Add new department", new_path(type: "department"),class: "btn btn-link" %></li>
+      <% end %>
 
 
-    <% if session[:user_type] == 'superadmin' || session[:user_type] == 'secretary' %>
-      <li><%= link_to "Add new faculty", new_path(type: "faculty"),class: "btn btn-link" %></li>
-      <li><%= link_to "Add new student", new_path(type: "student"),class: "btn btn-link" %></li>
-    <% end %>
+      <% if session[:user_type] == 'superadmin' || session[:user_type] == 'secretary' %>
+        <li><%= link_to "Add new faculty", new_path(type: "faculty"),class: "btn btn-link" %></li>
+        <li><%= link_to "Add new student", new_path(type: "student"),class: "btn btn-link" %></li>
+      <% end %>
 
-    <% if session[:user_type] == 'secretary' %>
-      <li><%= link_to "Create new activity", new_path(type: "activity"),class: "btn btn-link" %></li>
-      <li><%= link_to "See all students", show_path(type: "allstudents"),class: "btn btn-link" %></li>
-      <li><%= link_to "See all faculty", show_path( show_type: "allfaculty"),class: "btn btn-link" %></li>
-    <% end %>
-  </ul>
-</div>
-<% if session[:user_type] != "superadmin" && !@activities.nil? %>
+      <% if session[:user_type] == 'secretary' %>
+        <li><%= link_to "Create new activity", new_path(type: "activity"),class: "btn btn-link" %></li>
+        <li><%= link_to "See all students", show_path(type: "allstudents"),class: "btn btn-link" %></li>
+        <li><%= link_to "See all faculty", show_path( show_type: "allfaculty"),class: "btn btn-link" %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<% if session[:user_type] != "superadmin" %>
   <div class="thumbnail">
     <div class="title-container"><h2> Your Actvities </h2></div>
-    <ol>
-     <% @activities.each do |act|%>
-      <li>
-        <%= link_to "#{act.acttopic}", show_path(show_type: "activity", id: "#{act.id}"),class: "btn btn-link" %></br>
-      </li>
-     <%end%>
-   </ol>
- </div>
+    <% if !@activities.empty?%>
+      <ol>
+       <% @activities.each do |act|%>
+        <li>
+          <%= link_to "#{act.acttopic}", show_path(show_type: "activity", id: "#{act.id}"),class: "btn btn-link" %></br>
+        </li>
+       <%end%>
+      </ol>
+    <%else%>
+        No activity yet!!!
+    <% end %>
+  </div>
  <% end %>

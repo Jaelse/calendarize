@@ -72,7 +72,9 @@
           <% end %>
     <% end %>
   </div>
-  <% if Member.exists?( activity_id: params[:id], user_id: User.find_by( uname: session[:user_id]).id ) || Activity.exists?( user_id: User.find_by( uname: session[:user_id]).id ) %>
+  <% if Member.exists?( activity_id: params[:id], user_id: User.find_by( uname: session[:user_id]).id ) ||
+    Activity.exists?( user_id: User.find_by( uname: session[:user_id]).id) ||
+    Activity.exists?( id: params[:id], secretary_id: Secretary.find_by( user_id: User.find_by( uname: session[:user_id]).id).id) %>
     <%= form_tag create_path, remote: true do %>
       <div class=<"form-group">
         <%= text_area_tag :comment,nil, class: "form-control", placeholder: "write your comment here...", required: "required"  %>
@@ -87,19 +89,51 @@
 </div>
 
 <% elsif params[:show_type] == "department"%>
-  <div class="form-group">Department Name: <%= @show_data.deptname %><br /></div>
-  School: <%= @show_data.deptschool %>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Department Name:</dt><dd> <%= @show_data.deptname %></dd>
+      <dt>School:</dt><dd><%= @show_data.deptschool %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == @show_data.deptname %>
+      <%= link_to "Delete", delete_path( :delete_type => "department", :id => "#{@show_data.id}"), class: "btn btn-link" %>
+      <%= link_to "Edit", delete_path( :edit_type => "department", :id => "#{@show_data.id}"), class: "btn btn-link" %>
+      <% end %>
+    <dl>
+  </div>
 <% elsif params[:show_type] == "student"%>
-    Student's Username: <%= @show_data.uname %><br />
-    Student's email: <%= @show_data.uemail %><br />
-    Student's department: <%= @show_data.udept %><br />
-    Student's fos: <%= @student_data.fos %>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= @show_data.uname %></dd>
+      <dt>Email:</dt> <dd><%= @show_data.uemail %></dd>
+      <dt>Department:</dt> <dd><%= @show_data.udept %></dd>
+      <dt>Fos: </dt><dd><%= @student_data.fos %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == @show_data.udept %>
+        <%= link_to "Delete", delete_path( :delete_type => "student", :user_id => "#{@show_data.id}", :fos_id => "#{@student_data.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "student", :user_id => "#{@show_data.id}", :fos_id => "#{@student_data.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
 <% elsif params[:show_type] == "faculty"%>
-    Faculty's Username: <%= @show_data.uname %><br />
-    Faculty's email: <%= @show_data.uemail %><br />
-    Faculty's department: <%= @show_data.udept %><br />
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= @show_data.uname %></dd>
+      <dt>Email:</dt> <dd><%= @show_data.uemail %></dd>
+      <dt>Department:</dt><dd> <%= @show_data.udept %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == @show_data.udept %>
+        <%= link_to "Delete", delete_path( :delete_type => "faculty", :user_id => "#{@show_data.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "faculty", :user_id => "#{@show_data.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
 <% elsif params[:show_type] == "secretary"%>
-    Secretary's Username: <%= @show_data.uname %><br />
-    Secretary's email: <%= @show_data.uemail %><br />
-    Secretary's department: <%= @show_data.udept %><br />
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= @show_data.uname %></dd>
+      <dt>Email:</dt><dd> <%= @show_data.uemail %></dd>
+      <dt>Department:</dt> <dd><%= @show_data.udept %></dd>
+      <% if session[:user_type] == "superadmin" %>
+        <%= link_to "Delete", delete_path( :delete_type => "secretary", :user_id => "#{@show_data.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "secretary", :user_id => "#{@show_data.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
 <% end %>
