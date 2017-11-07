@@ -5,11 +5,13 @@
 <div class="thumbnail">
   <div id="members">
     <h4>Members</h4>
+    <ol>
     <% @members.each do |member|%>
-      <div class="thumbnail">
+      <li>
         <%= member.uname %></br>
-      </div>
+      </li>
     <%end%>
+  </ol>
   </div>
   <% if session[:user_type] == "secretary"%>
       <%= form_tag create_path, remote: true do %>
@@ -25,37 +27,65 @@
 </div>
 <div class="thumbnail">
   <h4>Schedules</h3>
-  <div id="schedules">
-    <% @meetings.each do |meeting| %>
-      <div class="thumbnail">
-        <%= meeting.schname %>
-        <% if meeting.schstart %>
-          <%= button_tag "schedule", id: "meeting#{meeting.id}",class: "btn btn-info",remote: true %>
+    <div id="schedules">
+      <table class="table table-striped">
+        <tr>
+          <th> Meeting </th>
+          <th> Date </th>
+          <th> Scheduling</th>
+          <th> Deadline </th>
+          <th> students's option</th>
+        </tr>
+        <% @meetings.each do |meeting| %>
+          <tr>
+            <th>
+              <%= meeting.schname %>
+            </th>
+            <th>
+              <%= meeting.schdate %>
+            </th>
+            <th>
+              <% if meeting.schstart %>
+                <%= link_to "schedule", id: "meeting#{meeting.id}",class: "btn btn-link",remote: true %>
+              <%else%>
+                <strong>not started</strong>
+              <% end %>
+            </th>
+            <th>
+              <% if (meeting.schdeadline).nil? %>
+                --------
+              <% else %>
+                <%= meeting.schdeadline %>
+              <% end %>
+            </th>
+            <th>
+              <% if session[:user_type] == "student" && !meeting.schstart%>
+                <%= form_tag edit_path, remote: true  do%>
+                  <%= hidden_field_tag :edit_type, "start_meeting" %>
+                  <%= hidden_field_tag :meeting_id, meeting.id %>
+                  <%= submit_tag "Start scheduling", id: "submit#{meeting.id}", class: "btn btn-info" %>
+                <% end%>
+              <% end %>
+            </th>
+          </table>
         <% end %>
-          <% if session[:user_type] == "student" && !meeting.schstart%>
-            <%= form_tag edit_path, remote: true  do%>
-              <%= hidden_field_tag :edit_type, "start_meeting" %>
-              <%= hidden_field_tag :meeting_id, meeting.id %>
-              <%= submit_tag "Start scheduling", id: "submit#{meeting.id}", class: "btn btn-info" %>
-            <% end%>
-          <% end %>
-        </div>
-    <% end %>
+          <div id='newmeetingform' hidden="true" >
+            <%= form_tag create_path, remote: true do%>
+              <%= label_tag :meeting_name %>:
+              <%= text_field_tag :meeting_name, nil, required: "required" %>
+              <%= label_tag :on %>:
+              <%= date_select :schdate, nil, :start_year => Date.today.year, :end_year => Date.today.year + 10 %>
+              <%= hidden_field_tag :add_type, 'meeting' %>
+              <%= hidden_field_tag :activity_id, params[:id] %>
+              <%= submit_tag 'Create meeting', class: "btn btn-info" %>
+            <% end %>
+          </div>
+        <% if session[:user_type] == "secretary"%>
+          <%= link_to "Add new meeting", nil, id: "meeting_form_link",class: "btn btn-link",remote: true %><br /><br />
+        <% end %>
+      </table>
   </div>
-<div id='newmeetingform' hidden="true" >
-  <%= form_tag create_path, remote: true do%>
-    <%= label_tag :meeting_name %>:
-    <%= text_field_tag :meeting_name, nil, required: "required" %>
-    <%= label_tag :on %>:
-    <%= date_select :schdate, nil, :start_year => Date.today.year, :end_year => Date.today.year + 10 %>
-    <%= hidden_field_tag :add_type, 'meeting' %>
-    <%= hidden_field_tag :activity_id, params[:id] %>
-    <%= submit_tag 'Create meeting', class: "btn btn-info" %>
-  <% end %>
 </div>
-<% if session[:user_type] == "secretary"%>
-  <%= link_to "Add new meeting", nil, id: "meeting_form_link",class: "btn btn-link",remote: true %><br /><br />
-<% end %>
 
 </div>
 <div class="thumbnail">
@@ -112,6 +142,21 @@
       <% end %>
     </dl>
   </div>
+<% elsif params[:show_type] == "all students"%>
+  <% @students.each do |student|%>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= student.user.uname %></dd>
+      <dt>Email:</dt> <dd><%= student.user.uemail %></dd>
+      <dt>Department:</dt> <dd><%= student.user.udept %></dd>
+      <dt>Fos: </dt><dd><%= student.fos %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == student.user.udept %>
+        <%= link_to "Delete", delete_path( :delete_type => "student", :user_id => "#{student.user.id}", :fos_id => "#{student.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "student", :user_id => "#{student.id}", :fos_id => "#{student.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
+  <% end %>
 <% elsif params[:show_type] == "faculty"%>
   <div class="thumbnail">
     <dl class="dl-horizontal">
@@ -124,6 +169,20 @@
       <% end %>
     </dl>
   </div>
+<% elsif params[:show_type] == "all faculty"%>
+  <% @faculties.each do |faculty|%>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= faculty.user.uname %></dd>
+      <dt>Email:</dt> <dd><%= faculty.user.uemail %></dd>
+      <dt>Department:</dt> <dd><%= faculty.user.udept %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == faculty.user.udept %>
+        <%= link_to "Delete", delete_path( :delete_type => "faculty", :user_id => "#{faculty.user.id}", :fos_id => "#{faculty.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "faculty", :user_id => "#{faculty.id}", :fos_id => "#{faculty.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
+  <% end %>
 <% elsif params[:show_type] == "secretary"%>
   <div class="thumbnail">
     <dl class="dl-horizontal">

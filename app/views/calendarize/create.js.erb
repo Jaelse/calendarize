@@ -1,4 +1,5 @@
 <% if params[:member].present? %>
+  //here also do some styling when you are done styling the main one
   $("#members").append("<%= User.find_by( uname: params[:member]).uname %><br />");
   $("#members").attr("placeholder","username");
 <% end %>

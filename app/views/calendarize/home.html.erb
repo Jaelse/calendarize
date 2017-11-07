@@ -10,12 +10,12 @@
       <% if session[:user_type] == 'superadmin' || session[:user_type] == 'secretary' %>
         <li><%= link_to "Add new faculty", new_path(type: "faculty"),class: "btn btn-link" %></li>
         <li><%= link_to "Add new student", new_path(type: "student"),class: "btn btn-link" %></li>
+        <li><%= link_to "See all students", show_path(show_type: "all students"),class: "btn btn-link" %></li>
+        <li><%= link_to "See all faculty", show_path( show_type: "all faculty"),class: "btn btn-link" %></li>
       <% end %>
 
       <% if session[:user_type] == 'secretary' %>
         <li><%= link_to "Create new activity", new_path(type: "activity"),class: "btn btn-link" %></li>
-        <li><%= link_to "See all students", show_path(type: "allstudents"),class: "btn btn-link" %></li>
-        <li><%= link_to "See all faculty", show_path( show_type: "allfaculty"),class: "btn btn-link" %></li>
       <% end %>
     </ul>
   </div>

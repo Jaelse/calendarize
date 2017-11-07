@@ -32,10 +32,16 @@ class CalendarizeController < ApplicationController
       @show_data = User.find_by( uname: params[:uname])
     elsif @show_type == 'secretary'
       @show_data = User.find_by( uname: params[:uname])
-    elsif @show_data == "allstudents"
-      #find all the user who is also a student where the secretary department is same as the user.
-    elsif @show_data == "allfaculty"
-      #find all the user who is also a student where the secretary department is same as the user.
+    elsif @show_type == "all students" && session[:user_type] == "secretary"
+      @secretary_dept ||= User.find_by( :uname => session[:user_id]).udept if session[:user_type] == "secretary"
+      @students = Student.joins( :user ).where( :users => {:udept => @secretary_dept})
+    elsif @show_type == "all students" && session[:user_type] == "superadmin"
+      @students = Student.joins( :user )
+    elsif @show_type == "all faculty" && session[:user_type] == "superadmin"
+      @faculties = Faculty.joins( :user )
+    elsif @show_type == "all faculty"
+      @secretary_dept ||= User.find_by( :uname => session[:user_id]).udept if session[:user_type] == "secretary"
+      @faculties = Faculty.joins( :user ).where( :users => {:udept => @secretary_dept})
     end
   end
 
@@ -44,7 +50,8 @@ class CalendarizeController < ApplicationController
     if session[:user_type] == 'student'
       @activities = Activity.where( user_id: User.find_by( uname: session[:user_id]).id)
     elsif session[:user_type] == 'faculty'
-      #do it for faculty ..........asdf.asdf.asdf.asdf.f.f.f.f.f.f.f.f.f.f.f. blah blah blah
+      @get_m = Member.where( user_id: User.find_by( uname: session[:user_id]).id)
+      @activities = Activity.where( id:  @get_m.map(&:activity_id))
     elsif session[:user_type] == 'secretary'
       @activities = Activity.where( secretary_id: Secretary.find_by( user_id: User.find_by( uname: session[:user_id]).id))
     end
