@@ -7,13 +7,34 @@
 <% if params[:comment].present? %>
   var comment_part = "<%= j(params[:comment])%>";
   var user_part = "<%= j(session[:user_id])%>";
-  var link_to_delete = "<%= j(link_to 'Delete', delete_path( :delete_type => 'comment', :id => '#{@comment.id}'), class: 'btn btn-link', remote: true) %>"
-  $("#comments").append("<blockquote><p>"+ comment_part +"</p><footer>"+ user_part +"</footer><footer>"+ link_to_delete +"</footer>");
+  var comment_id = "<%= j (@comment.id).to_s  %>";
+  var href = "/calendarize/delete?delete_type=comment&id="+comment_id;
+  var link_to_delete = "<a href="+href+" class= 'btn btn-link' data-remote=true>Delete</a>";
+  $("#comments").append("<div id=comment"+comment_id+" class='comments'><blockquote><p>"+ comment_part +"</p><footer>"+ user_part +"</footer><footer>"+ link_to_delete +"</footer></div>");
   $("#comment_box").val('');
 <% end %>
 
-<% if params[:schdate].present? %>
-  $("#schedules").append("<div class='thumbnail'><%= Schedule.find_by( schname: params[:meeting_name]).schname %></div>");
+<% if params[:meeting_name].present? %>
+  var schname = "<%= j Schedule.find_by( schname: params[:meeting_name]).schname.to_s %>";
+  var schdate = "<%= j Schedule.find_by( schname: params[:meeting_name]).schdate.to_s %>";
+  var table = $("#schedules").find("table");
+  table.append("<tr><th>"+ schname +"</th><th>" + schdate + "</th><th>Schedule</th><th>-------</th><th></tr></tr>");
   $("#newmeetingform").attr("hidden", true);
   $("#meeting_form_link").attr("hidden", false);
+<% end %>
+
+<%if params[:start_time].present? && params[:end_time].present? %>
+
+  $('.calendar').fullCalendar(
+    'renderEvent',
+    {
+      title: "<%= j @tag.to_s %>",
+      start: "<%= j @start_time.to_s %>",
+      end: "<%= j @end_time.to_s %>",
+      color: "<%= j @color.to_s %>"
+    },
+    true
+  )
+
+  $("#timing_form").attr("hidden", true);
 <% end %>

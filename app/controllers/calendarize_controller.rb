@@ -13,6 +13,16 @@ class CalendarizeController < ApplicationController
     end
   end
 
+  def event
+    @activity_id = params[:activity_id]
+    @meeting_id = params[:meeting_id]
+    @event = Availabletime.where( activity_id: @activity_id, id: @meeting_id)
+    puts @id
+    respond_to do |format|
+      format.json { render :json => @event.to_json }
+    end
+  end
+
   def show
     @show_type = params[:show_type]
     if @show_type == 'activity'
@@ -42,6 +52,7 @@ class CalendarizeController < ApplicationController
     elsif @show_type == "all faculty"
       @secretary_dept ||= User.find_by( :uname => session[:user_id]).udept if session[:user_type] == "secretary"
       @faculties = Faculty.joins( :user ).where( :users => {:udept => @secretary_dept})
+    elsif @show_type = "calendar"
     end
   end
 
@@ -122,11 +133,13 @@ class CalendarizeController < ApplicationController
         redirect_to new_path( :type => params[:add_type])
       end
     elsif params[:add_type] == "member" && session[:user_type] == 'secretary'
-      if !Activity.exists?( user_id: User.find_by( :uname => params[:member]).id)
+      if !Activity.exists?( id: params[:activity_id], user_id: User.find_by( :uname => params[:member]).id)
         @member = Member.new( :user_id => User.find_by( uname: params[:member]).id, :activity_id => params[:activity_id])
         respond_to do |format|
           if @member.save
             format.js
+          else
+            #alert that member already exists
           end
         end
       else
@@ -145,6 +158,50 @@ class CalendarizeController < ApplicationController
       respond_to do |format|
         if @schedule.save
           format.js
+        end
+      end
+    elsif params[:add_type] == "freetime"
+      @tag = params[:tag]
+      @stime = Time.zone.parse(params[:start_time]).utc
+      @start_time = DateTime.new(@stime.year.to_i,@stime.month.to_i,@stime.day.to_i,@stime.hour.to_i,@stime.min.to_i,@stime.sec.to_i)
+      @etime = Time.zone.parse(params[:end_time]).utc
+      @end_time = DateTime.new(@etime.year.to_i,@etime.month.to_i,@etime.day.to_i,@etime.hour.to_i,@etime.min.to_i,@etime.sec.to_i)
+      case params[:color]
+      when "Red"
+        @color = "#f45942"
+      when "Blue"
+        @color = "#4156f4"
+      when "Green"
+        @color = "#41f485"
+      when "Yellow"
+        @color = "#dfe21b"
+      when "Purple"
+        @color = "#e21be2"
+      when "Orange"
+        @color = "#ed9034"
+      end
+      @activity_id = params[:activity_id]
+      @member_id = Member.find_by( user_id: User.find_by( uname: session[:user_id]).id).id
+      @schedule_id = params[:meeting_id]
+      @user_id = User.find_by( uname: session[:user_id]).id
+
+      @event = []
+      @event << { id:"1",title:"#{@tag}", allDay: false, start:"#{@start_time}", end:"#{@end_time}", color:"#{@color}"  }
+
+      @availabletime = Availabletime.new( title: @tag,
+                                          start: @start_time,
+                                          end: @end_time,
+                                          color: @color,
+                                          activity_id: @activity_id,
+                                          member_id: @member_id,
+                                          user_id: @user_id,
+                                          schedule_id: @schedule_id)
+
+      respond_to do |format|
+        if @availabletime.save
+         format.js
+       else
+         puts @availabletime.errors.full_messages
         end
       end
     end
@@ -169,13 +226,19 @@ class CalendarizeController < ApplicationController
 
     elsif params[:edit_type] == 'department'
 
+    elsif  params[:edit_type] = 'availabletime'
+      @availabletime = Availabletime.find(params[:event][:id])
+      @availabletime.start = params[:event][:start]
+      @availabletime.end = params[:event][:end]
+      @availabletime.save
+
     end
   end
   def delete
     if params[:delete_type] == "comment" && session[:user_id] == User.find( Comment.find(params[:id]).user_id ).uname
       Comment.delete(params[:id])
       respond_to do |format|
-        format.js
+        format.js { render :action => 'delete'}
       end
     end
   end
@@ -190,13 +253,4 @@ class CalendarizeController < ApplicationController
         redirect_to index_path
     end
   end
-
-  # private
-  #   def current_user
-  #     if Superadmin.exists?( :suadusername => session[:user_id] )
-  #         @current_user ||= Superadmin.find_by( :suadusername => session[:user_id]) if session[:user_id]
-  #     else
-  #         @current_user ||= User.find_by(:uname => session[:user_id]) if session[:user_id]
-  #     end
-  #   end
 end

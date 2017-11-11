@@ -28,37 +28,29 @@
 <div class="thumbnail">
   <h4>Schedules</h3>
     <div id="schedules">
-      <table class="table table-striped">
-        <tr>
-          <th> Meeting </th>
-          <th> Date </th>
-          <th> Scheduling</th>
-          <th> Deadline </th>
-          <th> students's option</th>
-        </tr>
+      <%= content_tag :table, class: "table table-striped" do %>
+        <%= content_tag :tr do %>
+          <%= content_tag :th, "Meeting" %>
+          <%= content_tag :th, "Date" %>
+          <%= content_tag :th, "Scheduling" %>
+          <%= content_tag :th, "Deadline" %>
+          <%= content_tag :th, "students's option" %>
+        <% end %>
         <% @meetings.each do |meeting| %>
-          <tr>
-            <th>
-              <%= meeting.schname %>
-            </th>
-            <th>
-              <%= meeting.schdate %>
-            </th>
-            <th>
-              <% if meeting.schstart %>
-                <%= link_to "schedule", id: "meeting#{meeting.id}",class: "btn btn-link",remote: true %>
-              <%else%>
-                <strong>not started</strong>
-              <% end %>
-            </th>
-            <th>
+          <%= content_tag :tr do %>
+            <%= content_tag :td, "#{ meeting.schname}" %>
+            <%= content_tag :td, "#{ meeting.schdate}" %>
+            <%= content_tag :td do %>
+              <%= link_to_if meeting.schstart?, 'Schedule', show_path( :show_type => 'calendar', activity_id: params[:id], meeting_id: meeting.id), class: 'btn btn-info' %>
+            <% end %>
+            <%= content_tag :td do %>
               <% if (meeting.schdeadline).nil? %>
-                --------
+                <% "-------"%>
               <% else %>
                 <%= meeting.schdeadline %>
               <% end %>
-            </th>
-            <th>
+            <% end %>
+            <%= content_tag :td do%>
               <% if session[:user_type] == "student" && !meeting.schstart%>
                 <%= form_tag edit_path, remote: true  do%>
                   <%= hidden_field_tag :edit_type, "start_meeting" %>
@@ -66,25 +58,26 @@
                   <%= submit_tag "Start scheduling", id: "submit#{meeting.id}", class: "btn btn-info" %>
                 <% end%>
               <% end %>
-            </th>
-          </table>
-        <% end %>
-          <div id='newmeetingform' hidden="true" >
-            <%= form_tag create_path, remote: true do%>
-              <%= label_tag :meeting_name %>:
-              <%= text_field_tag :meeting_name, nil, required: "required" %>
-              <%= label_tag :on %>:
-              <%= date_select :schdate, nil, :start_year => Date.today.year, :end_year => Date.today.year + 10 %>
-              <%= hidden_field_tag :add_type, 'meeting' %>
-              <%= hidden_field_tag :activity_id, params[:id] %>
-              <%= submit_tag 'Create meeting', class: "btn btn-info" %>
             <% end %>
-          </div>
-        <% if session[:user_type] == "secretary"%>
-          <%= link_to "Add new meeting", nil, id: "meeting_form_link",class: "btn btn-link",remote: true %><br /><br />
+          <% end %>
         <% end %>
+      <% end %>
       </table>
   </div>
+  <div id='newmeetingform' hidden="true" >
+    <%= form_tag create_path, remote: true do%>
+    <%= label_tag :meeting_name %>:
+    <%= text_field_tag :meeting_name, nil, required: "required" %>
+    <%= label_tag :on %>:
+    <%= date_select :schdate, nil, :start_year => Date.today.year, :end_year => Date.today.year + 10 %>
+    <%= hidden_field_tag :add_type, 'meeting' %>
+    <%= hidden_field_tag :activity_id, params[:id] %>
+    <%= submit_tag 'Create meeting', class: "btn btn-info" %>
+    <% end %>
+  </div>
+  <% if session[:user_type] == "secretary"%>
+  <%= link_to "Add new meeting", nil, id: "meeting_form_link",class: "btn btn-link",remote: true %><br /><br />
+  <% end %>
 </div>
 
 </div>
@@ -195,4 +188,27 @@
       <% end %>
     </dl>
   </div>
+<% elsif params[:show_type] == "calendar"%>
+    <div id="timing_form" hidden="true">
+      <div class="thumbnail">
+        <%= form_tag create_path, class: "form-inline", remote: true do %>
+        <div class=<"form-group">
+          <%= label_tag :tag %>:
+          <%= text_field_tag :tag, nil, id: "timing_for",class: "form-control", required: "required", readonly: false %>
+          <%= label_tag :start_time %>:
+          <%= text_field_tag :start_time, nil, id: "start_time", class: "form-control", required: "required" %>
+          <%= label_tag :end_time %>:
+          <%= text_field_tag :end_time, nil, id: "end_timing",class: "form-control", required: "required" %>
+          <%= label_tag :color %>:
+          <%= select_tag :color, options_for_select(["Red","Blue","Green","Yellow","Purple", "Orange"],"Green"),class: "form-control" %>
+          <%= hidden_field_tag :add_type, 'freetime' %>
+          <%= hidden_field_tag :activity_id, params[:activity_id] %>
+          <%= hidden_field_tag :meeting_id, params[:meeting_id] %>
+          <%= submit_tag  "Post timing", class: "btn btn-info" %>
+        </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="calendar">
+    </div>
 <% end %>

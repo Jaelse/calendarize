@@ -9,14 +9,16 @@ Rails.application.routes.draw do
   get 'calendarize/home', as: 'home'
   get 'calendarize/new', as: 'new'
   post 'calendarize/create', as: 'create'
-  get 'calendarize/show', as: 'show'
-  get 'calendarize/delete', as: 'delete'
-  post 'calendarize/edit', as: 'edit'
-
+  get 'calendarize/show', as: 'show', remote: true
+  get 'calendarize/delete' => 'calendarize#delete', as: 'delete'
+  patch 'calendarize/edit', as: 'edit'
+  get 'calendarize/event' => 'calendarize#event', as: 'event'
   get 'user_list/index', as: 'user_list'
 
   resources :sessions
-  resources :calendarize
+  resources :calendarize do
+    resources :delete
+  end
 
 
   get 'ps4/index'
