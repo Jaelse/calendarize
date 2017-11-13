@@ -14,7 +14,6 @@ jQuery(document).on('turbolinks:load',->
     source: $('#member').data('autocomplete-source')
 
   $("#meeting_form_link").click(->
-    alert("asdfasdf")
     $('#newmeetingform').removeAttr("hidden")
     $('#meeting_form_link').attr("hidden",true)
   )
@@ -62,6 +61,9 @@ jQuery(document).on('turbolinks:load',->
     })
   )
 )
+
+alert("asdfasdf11111111")
+
 
 getParams = ->
   query = window.location.search.substring(1)
