@@ -20,3 +20,5 @@
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require_tree .
+
+alert("jaelse")
