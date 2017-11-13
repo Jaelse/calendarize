@@ -302,7 +302,7 @@ DEPENDENCIES
   activemodel-serializers-xml
   bcrypt (~> 3.1.7)
   best_in_place
-  bootstrap-sass
+  bootstrap-sass (~> 3.3.7)
   byebug
   capistrano-passenger
   capistrano-rails (~> 1.1)

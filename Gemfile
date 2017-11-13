@@ -32,7 +32,7 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'best_in_place'
 
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.3.7'
 
 gem 'fullcalendar-rails', '~> 2.8'
 gem 'momentjs-rails', '~> 2.17', '>= 2.17.1'

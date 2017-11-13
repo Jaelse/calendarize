@@ -20,5 +20,3 @@
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require_tree .
-
-alert("asdfasdfapplication")

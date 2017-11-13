@@ -1,0 +1,1 @@
+var calendar_initialized;calendar_initialized=function(){$(".calendar").each(function(){$(this)})},$(document).on("turbolinks:load",calendarize);
