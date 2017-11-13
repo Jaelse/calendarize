@@ -1,22 +1,245 @@
-Show <%= @show_type %>
+<div class="title-container">
+  <h1>Show <%= @show_type %></h1>
+</div>
 <% if params[:show_type] == "activity"%>
-  members:
-
-  <% @members.each do |member|%>
-   <%= member %></br>
-  <%end%>
-
-  <%= form_tag create_path do %>
-    <p>
-      <%= label_tag :add_member %>:
-      <%= text_field_tag :member,nil, placeholder: "username", required: "required"  %>
-      <%= hidden_field_tag :add_type, 'member' %>
-      <%= hidden_field_tag :activity_id, params[:id] %>
-      <%= submit_tag "Add member" %>
-    </p>
+<div class="thumbnail">
+  <div id="members">
+    <h4>Members</h4>
+    <ol>
+    <% @members.each do |member|%>
+      <li>
+        <%= member.uname %></br>
+      </li>
+    <%end%>
+  </ol>
+  </div>
+  <% if session[:user_type] == "secretary"%>
+      <%= form_tag create_path, remote: true do %>
+        <div id="add_member" class="form-group">
+          <%= label_tag :add_member %>:
+          <%= text_field_tag :member,nil, id: "member", class:"form-control", data: { autocomplete_source: user_list_path }, placeholder: "username", required: "required"  %>
+          <%= hidden_field_tag :add_type, 'member' %>
+          <%= hidden_field_tag :activity_id, params[:id] %><br />
+          <%= submit_tag "Add member", class: "btn btn-info" %>
+        </div>
+      <% end %>
   <% end %>
+</div>
+<div class="thumbnail">
+  <h4>Schedules</h3>
+    <div id="schedules">
+      <%= content_tag :table, class: "table table-striped" do %>
+        <%= content_tag :tr do %>
+          <%= content_tag :th, "Meeting" %>
+          <%= content_tag :th, "Date" %>
+          <%= content_tag :th, "Scheduling" %>
+          <%= content_tag :th, "Deadline" %>
+          <%= content_tag :th, "students's option" %>
+        <% end %>
+        <% @meetings.each do |meeting| %>
+          <%= content_tag :tr do %>
+            <%= content_tag :td, "#{ meeting.schname}" %>
+            <%= content_tag :td do %>
+              <% if meeting.schdate == nil %>
+                <% "-------" %>
+              <% else %>
+                <%= meeting.schdate %>
+              <% end %>
+            <% end %>
+            <%= content_tag :td do %>
+              <%= link_to_if meeting.schstart?, 'Schedule', show_path( :show_type => 'calendar', activity_id: params[:id], meeting_id: meeting.id), class: 'btn btn-info' %>
+            <% end %>
+            <%= content_tag :td do %>
+              <% if (meeting.schdeadline).nil? %>
+                <% "-------"%>
+              <% else %>
+                <%= meeting.schdeadline %>
+              <% end %>
+            <% end %>
+            <%= content_tag :td do%>
+              <% if session[:user_type] == "student" && !meeting.schstart%>
+                <%= form_tag edit_path, remote: true, method: :patch  do%>
+                  <%= hidden_field_tag :edit_type, "start_meeting" %>
+                  <%= hidden_field_tag :meeting_id, meeting.id %>
+                  <%= submit_tag "Start scheduling", id: "submit#{meeting.id}", class: "btn btn-info" %>
+                <% end%>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+      </table>
+  </div>
+  <div id='newmeetingform' hidden="true" >
+    <%= form_tag create_path, remote: true do%>
+    <%= label_tag :meeting_name %>:
+    <%= text_field_tag :meeting_name, nil, required: "required" %>
+    <%= label_tag :on %>:
+    <%= date_select :schdate, nil, prompt: { day: 'Select day', month: 'Select month', year: 'Select year' },:start_year => Date.today.year, :end_year => Date.today.year + 10%>
+    <%= hidden_field_tag :add_type, 'meeting' %>
+    <%= hidden_field_tag :activity_id, params[:id] %>
+    <%= submit_tag 'Create meeting', class: "btn btn-info" %>
+    <% end %>
+  </div>
+  <% if session[:user_type] == "secretary"%>
+  <%= link_to "Add new meeting", nil, id: "meeting_form_link",class: "btn btn-link",remote: true %><br /><br />
+  <% end %>
+</div>
+
+</div>
+<div class="thumbnail">
+  <h4>Comments</h4>
+  <div id="comments">
+    <% @comments.each do |comment| %>
+          <%= content_tag :div, class: "comments", id: "comment#{comment.id}" do %>
+          <blockquote>
+            <p><%= comment.comment %></p>
+            <footer><%= User.find(comment.user_id).uname %></footer>
+              <% if comment.user_id == User.find_by( uname: session[:user_id]).id%>
+                <footer><%= link_to "Delete", delete_path( :delete_type => "comment", :id => "#{comment.id}"), method: :delete,class: "btn btn-link", remote: true  %></footer>
+              <% end %>
+          <% end %>
+    <% end %>
+  </div>
+  <% if Member.exists?( activity_id: params[:id], user_id: User.find_by( uname: session[:user_id]).id ) ||
+    Activity.exists?( user_id: User.find_by( uname: session[:user_id]).id) ||
+    Activity.exists?( id: params[:id], secretary_id: Secretary.find_by( user_id: User.find_by( uname: session[:user_id]).id).id) %>
+    <%= form_tag create_path, remote: true do %>
+      <div class=<"form-group">
+        <%= text_area_tag :comment,nil, class: "form-control", id: "comment_box", placeholder: "write your comment here...", required: "required"  %>
+        <%= hidden_field_tag :add_type, 'comment' %>
+        <%= hidden_field_tag :activity_id, params[:id] %><br />
+        <%= submit_tag "Comment", class: "btn btn-success" %>
+        <br />
+      </div>
+    <% end %>
+  <% end %>
+</div>
+</div>
+
 <% elsif params[:show_type] == "department"%>
-  <% @show_data.each do |data|%>
-    <%= data %></br>
-  <%end%>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Department Name:</dt><dd> <%= @show_data.deptname %></dd>
+      <dt>School:</dt><dd><%= @show_data.deptschool %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == @show_data.deptname %>
+      <%= link_to "Delete", delete_path( :delete_type => "department", :id => "#{@show_data.id}"), class: "btn btn-link" %>
+      <%= link_to "Edit", delete_path( :edit_type => "department", :id => "#{@show_data.id}"), class: "btn btn-link" %>
+      <% end %>
+    <dl>
+  </div>
+<% elsif params[:show_type] == "student"%>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= @show_data.uname %></dd>
+      <dt>Email:</dt> <dd><%= @show_data.uemail %></dd>
+      <dt>Department:</dt> <dd><%= @show_data.udept %></dd>
+      <dt>Fos: </dt><dd><%= @student_data.fos %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == @show_data.udept %>
+        <%= link_to "Delete", delete_path( :delete_type => "student", :user_id => "#{@show_data.id}", :fos_id => "#{@student_data.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "student", :user_id => "#{@show_data.id}", :fos_id => "#{@student_data.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
+<% elsif params[:show_type] == "all students"%>
+  <% @students.each do |student|%>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= student.user.uname %></dd>
+      <dt>Email:</dt> <dd><%= student.user.uemail %></dd>
+      <dt>Department:</dt> <dd><%= student.user.udept %></dd>
+      <dt>Fos: </dt><dd><%= student.fos %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == student.user.udept %>
+        <%= link_to "Delete", delete_path( :delete_type => "student", :user_id => "#{student.user.id}", :fos_id => "#{student.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "student", :user_id => "#{student.id}", :fos_id => "#{student.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
+  <% end %>
+<% elsif params[:show_type] == "faculty"%>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= @show_data.uname %></dd>
+      <dt>Email:</dt> <dd><%= @show_data.uemail %></dd>
+      <dt>Department:</dt><dd> <%= @show_data.udept %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == @show_data.udept %>
+        <%= link_to "Delete", delete_path( :delete_type => "faculty", :user_id => "#{@show_data.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "faculty", :user_id => "#{@show_data.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
+<% elsif params[:show_type] == "all faculty"%>
+  <% @faculties.each do |faculty|%>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= faculty.user.uname %></dd>
+      <dt>Email:</dt> <dd><%= faculty.user.uemail %></dd>
+      <dt>Department:</dt> <dd><%= faculty.user.udept %></dd>
+      <% if session[:user_type] == "superadmin" || User.find_by( uname: session[:user_id]).udept == faculty.user.udept %>
+        <%= link_to "Delete", delete_path( :delete_type => "faculty", :user_id => "#{faculty.user.id}", :fos_id => "#{faculty.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "faculty", :user_id => "#{faculty.id}", :fos_id => "#{faculty.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
+  <% end %>
+<% elsif params[:show_type] == "secretary"%>
+  <div class="thumbnail">
+    <dl class="dl-horizontal">
+      <dt>Username:</dt><dd> <%= @show_data.uname %></dd>
+      <dt>Email:</dt><dd> <%= @show_data.uemail %></dd>
+      <dt>Department:</dt> <dd><%= @show_data.udept %></dd>
+      <% if session[:user_type] == "superadmin" %>
+        <%= link_to "Delete", delete_path( :delete_type => "secretary", :user_id => "#{@show_data.id}"), class: "btn btn-link" %>
+        <%= link_to "Edit", delete_path( :edit_type => "secretary", :user_id => "#{@show_data.id}"), class: "btn btn-link" %>
+      <% end %>
+    </dl>
+  </div>
+<% elsif params[:show_type] == "calendar"%>
+    <div id="timing_form" hidden="true">
+      <div class="thumbnail">
+        <%= form_tag create_path, class: "form-inline", remote: true do %>
+        <div class=<"form-group">
+          <%= label_tag :tag %>:
+          <%= text_field_tag :tag, nil, id: "timing_for",class: "form-control", required: "required", readonly: false %>
+          <%= label_tag :start_time %>:
+          <%= text_field_tag :start_time, nil, id: "start_time", class: "form-control", required: "required" %>
+          <%= label_tag :end_time %>:
+          <%= text_field_tag :end_time, nil, id: "end_timing",class: "form-control", required: "required" %>
+          <%= label_tag :color %>:
+          <%= select_tag :color, options_for_select(["Red","Blue","Green","Yellow","Purple", "Orange"],"Green"),class: "form-control" %>
+          <%= hidden_field_tag :add_type, 'freetime' %>
+          <%= hidden_field_tag :activity_id, params[:activity_id] %>
+          <%= hidden_field_tag :meeting_id, params[:meeting_id] %>
+          <%= submit_tag  "Post timing", class: "btn btn-info" %>
+        </div>
+        <% end %>
+      </div>
+    </div>
+    <div id="edit_timing_form" hidden="true">
+      <div class="thumbnail">
+        <div class=<"form-group">
+        <%=form_tag edit_path, class: "form-inline", remote: true , method: :patch do %>
+          <%= label_tag :tag %>:
+          <%= text_field_tag :edit_tag, nil, id: "edit_timing_for",class: "form-control", required: "required", readonly: false %>
+          <%= label_tag :start_time %>:
+          <%= text_field_tag :edit_start_time, nil, id: "edit_start_time", class: "form-control", required: "required" %>
+          <%= label_tag :end_time %>:
+          <%= text_field_tag :edit_end_time, nil, id: "edit_end_timing",class: "form-control", required: "required" %>
+          <%= label_tag :color %>:
+          <%= select_tag :edit_color, options_for_select(["Red","Blue","Green","Yellow","Purple", "Orange"],"Green"),class: "form-control" %>
+          <%= hidden_field_tag :edit_type, 'edit_availabletime' %>
+          <%= hidden_field_tag :availabletime_id, nil, id: "edit_availabletime_id" %>
+          <%= submit_tag  "Edit timing", class: "btn btn-info" %>
+        <% end %>
+        <br>
+        <%= form_tag delete_path, class: "form-inline", remote: true, method: :delete do %>
+          <%= hidden_field_tag :availabletime_id, nil, id: "delete_availabletime_id" %>
+          <%= hidden_field_tag :delete_type, 'delete_availabletime' %>
+          <%= submit_tag  "Delete timing", class: "btn btn-info" %>
+        <% end %>
+      </div>
+      </div>
+    </div>
+    <div class="calendar">
+    </div>
 <% end %>

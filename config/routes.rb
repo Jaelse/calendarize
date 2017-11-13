@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   get 'ps5/index'
 
-  get 'ps5/index'  
+  get 'ps5/index'
 
   get 'sessions/new', as: 'log_in'
   get 'sessions/destroy', as: 'log_out'
@@ -11,9 +11,17 @@ Rails.application.routes.draw do
   get 'calendarize/home', as: 'home'
   get 'calendarize/new', as: 'new'
   post 'calendarize/create', as: 'create'
-  get 'calendarize/show', as: 'show'
+  get 'calendarize/show', as: 'show', remote: true
+  delete 'calendarize/delete' => 'calendarize#delete', as: 'delete'
+  patch 'calendarize/edit', as: 'edit'
+  get 'calendarize/event' => 'calendarize#event', as: 'event'
+  get 'user_list/index', as: 'user_list'
+
   resources :sessions
-  resources :calendarize
+  resources :calendarize do
+    resources :delete
+  end
+
 
   get 'ps4/index'
   get 'ps4/download_pdf'
@@ -41,6 +49,6 @@ Rails.application.routes.draw do
 
   get 'problemsets/index'
 
-  root :to => 'problemsets#index'
+  root :to => 'calendarize#index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

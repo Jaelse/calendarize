@@ -1,0 +1,11 @@
+<% if params[:delete_type] == "comment" %>
+  id = "comment"+<%= params[:id]%>;
+  comment = document.getElementById(id);
+  comment.remove();
+<% end %>
+
+<% if params[:delete_type] == "delete_availabletime" %>
+  $('.calendar').fullCalendar('removeEvents', ["<%= params[:availabletime_id] %>"]);
+
+  $("#edit_timing_form").hide();
+<% end %>
