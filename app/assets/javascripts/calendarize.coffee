@@ -62,9 +62,6 @@ jQuery(document).on('turbolinks:load',->
   )
 )
 
-alert("asdfasdf11111111")
-
-
 getParams = ->
   query = window.location.search.substring(1)
   raw_vars = query.split("&")
