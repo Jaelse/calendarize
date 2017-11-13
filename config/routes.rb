@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'ps6/index'
+
   get 'ps5/index'
 
   get 'ps5/index'  
