@@ -14,12 +14,13 @@ jQuery(document).on('turbolinks:load',->
     source: $('#member').data('autocomplete-source')
 
   $("#meeting_form_link").click(->
-    $('#newmeetingform').removeAttr("hidden");
-    $('#meeting_form_link').attr("hidden",true);
+    alert("asdfasdf")
+    $('#newmeetingform').removeAttr("hidden")
+    $('#meeting_form_link').attr("hidden",true)
   )
 
   $('.calendar').each(->
-    calendar = $(this);
+    calendar = $(this)
     calendar.fullCalendar({
       header: {
         left: 'prev,next today',
