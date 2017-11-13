@@ -5,4 +5,3 @@ calendar_initialized = function(){
   })
 };
 $(document).on("turbolinks:load", calendarize);
-alert("asdf");

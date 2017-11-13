@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 alert("11111")
 jQuery(document).on('turbolinks:load',->
-  alert("asdf")
+  alert("asdf1")
   $('.best_in_place').best_in_place()
 
   $('#activity_type').autocomplete
