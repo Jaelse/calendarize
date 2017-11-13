@@ -17,7 +17,7 @@
       <%= form_tag create_path, remote: true do %>
         <div id="add_member" class="form-group">
           <%= label_tag :add_member %>:
-          <%= text_field_tag :member,nil, class:"form-control", data: { autocomplete_source: user_list_path }, placeholder: "username", required: "required"  %>
+          <%= text_field_tag :member,nil, id: "member", class:"form-control", data: { autocomplete_source: user_list_path }, placeholder: "username", required: "required"  %>
           <%= hidden_field_tag :add_type, 'member' %>
           <%= hidden_field_tag :activity_id, params[:id] %><br />
           <%= submit_tag "Add member", class: "btn btn-info" %>
@@ -39,7 +39,13 @@
         <% @meetings.each do |meeting| %>
           <%= content_tag :tr do %>
             <%= content_tag :td, "#{ meeting.schname}" %>
-            <%= content_tag :td, "#{ meeting.schdate}" %>
+            <%= content_tag :td do %>
+              <% if meeting.schdate == nil %>
+                <% "-------" %>
+              <% else %>
+                <%= meeting.schdate %>
+              <% end %>
+            <% end %>
             <%= content_tag :td do %>
               <%= link_to_if meeting.schstart?, 'Schedule', show_path( :show_type => 'calendar', activity_id: params[:id], meeting_id: meeting.id), class: 'btn btn-info' %>
             <% end %>
@@ -52,7 +58,7 @@
             <% end %>
             <%= content_tag :td do%>
               <% if session[:user_type] == "student" && !meeting.schstart%>
-                <%= form_tag edit_path, remote: true  do%>
+                <%= form_tag edit_path, remote: true, method: :patch  do%>
                   <%= hidden_field_tag :edit_type, "start_meeting" %>
                   <%= hidden_field_tag :meeting_id, meeting.id %>
                   <%= submit_tag "Start scheduling", id: "submit#{meeting.id}", class: "btn btn-info" %>
@@ -69,7 +75,7 @@
     <%= label_tag :meeting_name %>:
     <%= text_field_tag :meeting_name, nil, required: "required" %>
     <%= label_tag :on %>:
-    <%= date_select :schdate, nil, :start_year => Date.today.year, :end_year => Date.today.year + 10 %>
+    <%= date_select :schdate, nil, prompt: { day: 'Select day', month: 'Select month', year: 'Select year' },:start_year => Date.today.year, :end_year => Date.today.year + 10%>
     <%= hidden_field_tag :add_type, 'meeting' %>
     <%= hidden_field_tag :activity_id, params[:id] %>
     <%= submit_tag 'Create meeting', class: "btn btn-info" %>
@@ -90,7 +96,7 @@
             <p><%= comment.comment %></p>
             <footer><%= User.find(comment.user_id).uname %></footer>
               <% if comment.user_id == User.find_by( uname: session[:user_id]).id%>
-                <footer><%= link_to "Delete", delete_path( :delete_type => "comment", :id => "#{comment.id}"), class: "btn btn-link", remote: true  %></footer>
+                <footer><%= link_to "Delete", delete_path( :delete_type => "comment", :id => "#{comment.id}"), method: :delete,class: "btn btn-link", remote: true  %></footer>
               <% end %>
           <% end %>
     <% end %>
@@ -207,6 +213,31 @@
           <%= submit_tag  "Post timing", class: "btn btn-info" %>
         </div>
         <% end %>
+      </div>
+    </div>
+    <div id="edit_timing_form" hidden="true">
+      <div class="thumbnail">
+        <div class=<"form-group">
+        <%=form_tag edit_path, class: "form-inline", remote: true , method: :patch do %>
+          <%= label_tag :tag %>:
+          <%= text_field_tag :edit_tag, nil, id: "edit_timing_for",class: "form-control", required: "required", readonly: false %>
+          <%= label_tag :start_time %>:
+          <%= text_field_tag :edit_start_time, nil, id: "edit_start_time", class: "form-control", required: "required" %>
+          <%= label_tag :end_time %>:
+          <%= text_field_tag :edit_end_time, nil, id: "edit_end_timing",class: "form-control", required: "required" %>
+          <%= label_tag :color %>:
+          <%= select_tag :edit_color, options_for_select(["Red","Blue","Green","Yellow","Purple", "Orange"],"Green"),class: "form-control" %>
+          <%= hidden_field_tag :edit_type, 'edit_availabletime' %>
+          <%= hidden_field_tag :availabletime_id, nil, id: "edit_availabletime_id" %>
+          <%= submit_tag  "Edit timing", class: "btn btn-info" %>
+        <% end %>
+        <br>
+        <%= form_tag delete_path, class: "form-inline", remote: true, method: :delete do %>
+          <%= hidden_field_tag :availabletime_id, nil, id: "delete_availabletime_id" %>
+          <%= hidden_field_tag :delete_type, 'delete_availabletime' %>
+          <%= submit_tag  "Delete timing", class: "btn btn-info" %>
+        <% end %>
+      </div>
       </div>
     </div>
     <div class="calendar">

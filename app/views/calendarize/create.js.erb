@@ -1,7 +1,10 @@
-<% if params[:member].present? %>
+<% if params[:member].present? && @saved == true%>
   //here also do some styling when you are done styling the main one
   $("#members").append("<%= User.find_by( uname: params[:member]).uname %><br />");
-  $("#members").attr("placeholder","username");
+  $("#member").val("username");
+<% elsif @saved == false %>
+  $("#member").val("");
+  alert("member already exists");
 <% end %>
 
 <% if params[:comment].present? %>
@@ -9,7 +12,7 @@
   var user_part = "<%= j(session[:user_id])%>";
   var comment_id = "<%= j (@comment.id).to_s  %>";
   var href = "/calendarize/delete?delete_type=comment&id="+comment_id;
-  var link_to_delete = "<a href="+href+" class= 'btn btn-link' data-remote=true>Delete</a>";
+  var link_to_delete = "<a href="+href+" class= 'btn btn-link' data-remote=true data-method= 'delete'>Delete</a>";
   $("#comments").append("<div id=comment"+comment_id+" class='comments'><blockquote><p>"+ comment_part +"</p><footer>"+ user_part +"</footer><footer>"+ link_to_delete +"</footer></div>");
   $("#comment_box").val('');
 <% end %>
@@ -28,6 +31,7 @@
   $('.calendar').fullCalendar(
     'renderEvent',
     {
+      id: "<%= j @availabletime.id.to_s %>",
       title: "<%= j @tag.to_s %>",
       start: "<%= j @start_time.to_s %>",
       end: "<%= j @end_time.to_s %>",

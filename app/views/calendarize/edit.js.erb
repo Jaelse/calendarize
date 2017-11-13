@@ -2,3 +2,19 @@
   var id = "<%= j(params['meeting_id'])%>";
   $("#submit"+id).hide();
 <% end %>
+
+<% if params[:edit_type] == "edit_availabletime"%>
+$('.calendar').fullCalendar('removeEvents', ["<%= @event.id %>"]);
+$('.calendar').fullCalendar(
+  'renderEvent',
+  {
+    title: "<%= j @event.title.to_s %>",
+    start: moment("<%= j @event.start.to_s %>", "YYYY-MM-DD HH:mm:ss"),
+    end: moment("<%= j @event.end.to_s %>", "YYYY-MM-DD HH:mm:ss"),
+    color: "<%= j @event.color.to_s %>"
+  },
+  true
+);
+
+  $("#edit_timing_form").hide();
+<% end %>

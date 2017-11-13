@@ -16,8 +16,7 @@ class CalendarizeController < ApplicationController
   def event
     @activity_id = params[:activity_id]
     @meeting_id = params[:meeting_id]
-    @event = Availabletime.where( activity_id: @activity_id, id: @meeting_id)
-    puts @id
+    @event = Availabletime.where( activity_id: @activity_id, schedule_id: @meeting_id)
     respond_to do |format|
       format.json { render :json => @event.to_json }
     end
@@ -133,16 +132,20 @@ class CalendarizeController < ApplicationController
         redirect_to new_path( :type => params[:add_type])
       end
     elsif params[:add_type] == "member" && session[:user_type] == 'secretary'
-      if !Activity.exists?( id: params[:activity_id], user_id: User.find_by( :uname => params[:member]).id)
+      if !Activity.exists?( id: params[:activity_id], user_id: User.find_by( :uname => params[:member]).id) && !Member.exists?( activity_id: params[:activity_id], user_id: User.find_by( :uname => params[:member]).id)
         @member = Member.new( :user_id => User.find_by( uname: params[:member]).id, :activity_id => params[:activity_id])
         respond_to do |format|
           if @member.save
+            @saved = true
+            flash[:notice] = " Member added !!! "
             format.js
-          else
-            #alert that member already exists
           end
         end
       else
+        respond_to do |format|
+          @saved = false
+          format.js
+        end
       end
     elsif params[:add_type] == "comment" && session[:user_id].present?
       @comment = Comment.new( :user_id => User.find_by( uname: session[:user_id]).id, :comment => params[:comment], :activity_id => params[:activity_id])
@@ -153,13 +156,18 @@ class CalendarizeController < ApplicationController
       end
     elsif params[:add_type] == "meeting" && Activity.exists?( id: params[:activity_id], secretary_id: Secretary.find_by( user_id: User.find_by( uname: session[:user_id]).id).id)
       h=params[:schdate]
-      @schdate=Date.new(h['(1i)'].to_i, h['(2i)'].to_i, h['(3i)'].to_i)
+      if h['(1i)'] == "" && h['(2i)']  == "" && h['(3i)'] == ""
+        @schdate = nil
+      else
+        @schdate = Date.new(h['(1i)'].to_i, h['(2i)'].to_i, h['(3i)'].to_i)
+      end
       @schedule = Schedule.new( :schname => params[:meeting_name], :schdate => @schdate, :schstart => false, :schfinished => false, :activity_id => params[:activity_id])
       respond_to do |format|
         if @schedule.save
           format.js
         end
       end
+
     elsif params[:add_type] == "freetime"
       @tag = params[:tag]
       @stime = Time.zone.parse(params[:start_time]).utc
@@ -199,6 +207,7 @@ class CalendarizeController < ApplicationController
 
       respond_to do |format|
         if @availabletime.save
+          puts @availabletime.id
          format.js
        else
          puts @availabletime.errors.full_messages
@@ -226,12 +235,29 @@ class CalendarizeController < ApplicationController
 
     elsif params[:edit_type] == 'department'
 
-    elsif  params[:edit_type] = 'availabletime'
-      @availabletime = Availabletime.find(params[:event][:id])
-      @availabletime.start = params[:event][:start]
-      @availabletime.end = params[:event][:end]
-      @availabletime.save
+    elsif  params[:edit_type] == 'availabletime'
 
+      @availabletime = Availabletime.find(params[:event][:id])
+
+      if session[:user_id] == User.find_by(@availabletime.user_id).uname
+        @availabletime.start = params[:event][:start]
+        @availabletime.end = params[:event][:end]
+        @availabletime.save
+      end
+    elsif params[:edit_type] == 'edit_availabletime'
+      @event = Availabletime.find(params[:availabletime_id])
+      if session[:user_id] == User.find_by(@event.user_id).uname
+        @event.title = params[:edit_tag]
+        @event.start = params[:edit_start_time]
+        @event.end = params[:edit_end_time]
+        @event.color = params[:edit_color]
+
+        respond_to do |format|
+          if @event.save
+            format.js
+          end
+        end
+      end
     end
   end
   def delete
@@ -239,6 +265,14 @@ class CalendarizeController < ApplicationController
       Comment.delete(params[:id])
       respond_to do |format|
         format.js { render :action => 'delete'}
+      end
+    elsif params[:delete_type] == "delete_availabletime"
+      @event = Availabletime.find(params[:availabletime_id])
+      respond_to do |format|
+        if session[:user_id] == User.find(@event.user_id).uname
+          Availabletime.delete( params[:availabletime_id])
+          format.js { render :action => 'delete'}
+        end
       end
     end
   end
