@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   get 'ps6/index'
-
+  get 'ps6/user'
+  get 'ps6/web9'
+  get 'ps6/web7' 
+   
   get 'ps5/index'
 
   get 'ps5/index'
