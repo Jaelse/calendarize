@@ -51,6 +51,9 @@ GEM
       execjs
     backports (3.10.3)
     bcrypt (3.1.11)
+    best_in_place (3.1.1)
+      actionpack (>= 3.2)
+      railties (>= 3.2)
     bindex (0.5.0)
     bootstrap-sass (3.3.7)
       autoprefixer-rails (>= 5.2.1)
@@ -298,6 +301,7 @@ PLATFORMS
 DEPENDENCIES
   activemodel-serializers-xml
   bcrypt (~> 3.1.7)
+  best_in_place
   bootstrap-sass
   byebug
   capistrano-passenger
