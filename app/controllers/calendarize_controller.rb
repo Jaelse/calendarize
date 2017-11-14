@@ -1,4 +1,5 @@
 class CalendarizeController < ApplicationController
+  respond_to :html, :js
   #helper_method :current_user
   before_action :require_login, except: [:index]
   before_action :get_departments, only: [:new]
