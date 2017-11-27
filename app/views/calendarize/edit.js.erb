@@ -3,11 +3,13 @@
   $("#submit"+id).hide();
 <% end %>
 
-<% if params[:edit_type] == "edit_availabletime"%>
+<% if params[:edit_type] == "edit_availabletime" && @edit_availabletime %>
+
 $('.calendar').fullCalendar('removeEvents', ["<%= @event.id %>"]);
 $('.calendar').fullCalendar(
   'renderEvent',
   {
+    id: "<%= @event.id %>"
     title: "<%= j @event.title.to_s %>",
     start: moment("<%= j @event.start.to_s %>", "YYYY-MM-DD HH:mm:ss"),
     end: moment("<%= j @event.end.to_s %>", "YYYY-MM-DD HH:mm:ss"),
@@ -15,6 +17,8 @@ $('.calendar').fullCalendar(
   },
   true
 );
-
   $("#edit_timing_form").hide();
+<% elsif !@edit_availabletime %>
+  $("#edit_timing_form").hide();
+  alert("Your not allowed to edit this event.");
 <% end %>

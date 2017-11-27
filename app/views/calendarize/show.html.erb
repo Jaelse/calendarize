@@ -195,6 +195,25 @@
     </dl>
   </div>
 <% elsif params[:show_type] == "calendar"%>
+  <% if session[:gcal_token].present?%>
+    <%= button_tag "Import calendar", id: "import_calendar", class: "btn btn-info", remote: true%><br /><br />
+    <div id="import_form" hidden="true">
+      <div class="thumbnail">
+        <%= form_tag import_calendar_path, class: "form-inline", remote: true do %>
+        <div class=<"form-group">
+          <%= label_tag :event_keyword %>:
+          <%= text_field_tag :event_keyword, nil, id: "event_keyword",class: "form-control", required: "required", readonly: false %>
+          <%= label_tag :color %>:
+          <%= select_tag :color, options_for_select(["Red","Blue","Green","Yellow","Purple", "Orange"],"Green"),class: "form-control" %>
+          <%= hidden_field_tag :add_type, 'import_calendar' %>
+          <%= hidden_field_tag :activity_id, params[:activity_id] %>
+          <%= hidden_field_tag :meeting_id, params[:meeting_id] %>
+          <%= submit_tag  "Post timing", class: "btn btn-info" %>
+        </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
     <div id="timing_form" hidden="true">
       <div class="thumbnail">
         <%= form_tag create_path, class: "form-inline", remote: true do %>

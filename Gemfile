@@ -37,6 +37,8 @@ gem 'bootstrap-sass', '~> 3.3.7'
 gem 'fullcalendar-rails', '~> 2.8'
 gem 'momentjs-rails', '~> 2.17', '>= 2.17.1'
 
+gem 'google-api-client', require: 'google/apis/calendar_v3'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

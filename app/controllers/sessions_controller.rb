@@ -8,6 +8,7 @@ class SessionsController < ApplicationController
     if Superadmin.authenticate(params[:username], params[:password])
       session[:user_id] = params[:username]
       session[:user_type] = "superadmin"
+
       redirect_to home_path
     else
 
@@ -26,14 +27,40 @@ class SessionsController < ApplicationController
           if Secretary.exists?( :user_id => @user.id )
             session[:user_id] = params[:username]
             session[:user_type] = 'secretary'
+
+            if(!Secretary.find_by( :user_id => @user.id).gcalendar.nil? && !Secretary.find_by( :user_id => @user.id).token.nil?)
+              gcalendar_hash = {
+                "access_token" => Secretary.find_by( :user_id => @user.id).token,
+                "expires_in" => 3600,
+                "refresh_token" => Secretary.find_by( :user_id => @user.id).gcalendar,
+                "token_type" => "Bearer"
+              }
+
+              session[:gcal_token] = gcalendar_hash
+            end
+
             redirect_to home_path
           elsif Student.exists?( :user_id => @user.id )
             session[:user_id] = params[:username]
             session[:user_type] = 'student'
+
+
             redirect_to home_path
           elsif Faculty.exists?( :user_id => @user.id )
             session[:user_id] = params[:username]
             session[:user_type] = 'faculty'
+
+            if(!Faculty.find_by( :user_id => @user.id).gcalendar.nil? && !Faculty.find_by( :user_id => @user.id).token.nil? )
+              gcalendar_hash = {
+                "access_token" => Faculty.find_by( :user_id => @user.id).token,
+                "expires_in" => 3600,
+                "refresh_token" => Faculty.find_by( :user_id => @user.id).gcalendar,
+                "token_type" => "Bearer"
+              }
+
+              session[:gcal_token] = gcalendar_hash
+            end
+
             redirect_to home_path
           end
         else

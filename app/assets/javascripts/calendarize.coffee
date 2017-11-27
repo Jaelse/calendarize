@@ -61,6 +61,12 @@ jQuery(document).on('turbolinks:load',->
         $('#edit_timing_form').show()
     })
   )
+
+  $("#import_calendar").on("click",->
+    $('#import_calendar').hide()
+    $('#import_form').show()
+  )
+
 )
 
 getParams = ->

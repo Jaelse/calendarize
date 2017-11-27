@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   get 'ps6/index'
   get 'ps6/user'
   get 'ps6/web9'
-  get 'ps6/web7' 
-   
+  get 'ps6/web7'
+
   get 'ps5/index'
 
   get 'ps5/index'
@@ -18,7 +18,11 @@ Rails.application.routes.draw do
   delete 'calendarize/delete' => 'calendarize#delete', as: 'delete'
   patch 'calendarize/edit', as: 'edit'
   get 'calendarize/event' => 'calendarize#event', as: 'event'
+  get 'calendarize/google_calendar' => 'calendarize#google_calendar', as: 'google_calendar'
+  get 'calendarize/google_calendar_callback' => 'calendarize#google_calendar_callback', as: 'google_calendar_callback'
+  post 'calendarize/import_calendar', as: 'import_calendar'
   get 'user_list/index', as: 'user_list'
+
 
   resources :sessions
   resources :calendarize do

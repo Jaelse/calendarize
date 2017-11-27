@@ -1,6 +1,7 @@
 class CalendarizeController < ApplicationController
   #helper_method :current_user
   before_action :require_login, except: [:index]
+  before_action :update_gcal_token, except: [:index]
   before_action :get_departments, only: [:new]
 
   def new
@@ -52,6 +53,7 @@ class CalendarizeController < ApplicationController
       @secretary_dept ||= User.find_by( :uname => session[:user_id]).udept if session[:user_type] == "secretary"
       @faculties = Faculty.joins( :user ).where( :users => {:udept => @secretary_dept})
     elsif @show_type = "calendar"
+      NotificationMailer.notification("st119370@ait.asia").deliver
     end
   end
 
@@ -174,13 +176,26 @@ class CalendarizeController < ApplicationController
       @start_time = DateTime.new(@stime.year.to_i,@stime.month.to_i,@stime.day.to_i,@stime.hour.to_i,@stime.min.to_i,@stime.sec.to_i)
       @etime = Time.zone.parse(params[:end_time]).utc
       @end_time = DateTime.new(@etime.year.to_i,@etime.month.to_i,@etime.day.to_i,@etime.hour.to_i,@etime.min.to_i,@etime.sec.to_i)
+
+      if @tag == "meeting" && session[:user_type] == "secretary"
+        @schedule = Schedule.find(params[:meeting_id])
+        @schedule.schdate = @start_time
+
+        @schedule.save
+      end
+      if @tag == "deadline" && session[:user_type] == "secretary"
+        @schedule = Schedule.find(params[:meeting_id])
+        @schedule.schdeadline = @start_time
+
+        @schedule.save
+      end
       case params[:color]
       when "Red"
         @color = "#f45942"
       when "Blue"
-        @color = "#4156f4"
+        @color = "#09e9f9"
       when "Green"
-        @color = "#41f485"
+        @color = "#88ff00"
       when "Yellow"
         @color = "#dfe21b"
       when "Purple"
@@ -239,23 +254,77 @@ class CalendarizeController < ApplicationController
 
       @availabletime = Availabletime.find(params[:event][:id])
 
-      if session[:user_id] == User.find_by(@availabletime.user_id).uname
+      if session[:user_id] == User.find(@availabletime.user_id).uname
         @availabletime.start = params[:event][:start]
         @availabletime.end = params[:event][:end]
+
+        if @availabletime.title == "meeting" && session[:user_type] == "secretary"
+          @schedule = Schedule.find(@availabletime.schedule_id)
+          @schedule.schdate = params[:event][:start]
+
+          @schedule.save
+        end
+
+        if @availabletime.title == "deadline" && session[:user_type] == "secretary"
+          @schedule = Schedule.find(@availabletime.schedule_id)
+          @schedule.schdeadline = params[:event][:start]
+
+          @schedule.save
+        end
+
         @availabletime.save
+
+        @edit_availabletime = true
       end
     elsif params[:edit_type] == 'edit_availabletime'
+      puts params[:availabletime_id]
       @event = Availabletime.find(params[:availabletime_id])
-      if session[:user_id] == User.find_by(@event.user_id).uname
+      if session[:user_id] == User.find(@event.user_id).uname
+
         @event.title = params[:edit_tag]
         @event.start = params[:edit_start_time]
         @event.end = params[:edit_end_time]
-        @event.color = params[:edit_color]
+
+        if @event.title == "meeting" && session[:user_type] == "secretary"
+          @schedule = Schedule.find(@event.schedule_id)
+          @schedule.schdate = params[:edit_start_time]
+
+          @schedule.save
+        end
+
+        if @event.title == "deadline" && session[:user_type] == "secretary"
+          @schedule = Schedule.find(@event.schedule_id)
+          @schedule.schdeadline = params[:edit_start_time]
+
+          @schedule.save
+        end
+
+        case params[:edit_color]
+        when "Red"
+          @event.color = "#f45942"
+        when "Blue"
+          @event.color = "#09e9f9"
+        when "Green"
+          @event.color = "#88ff00"
+        when "Yellow"
+          @event.color = "#dfe21b"
+        when "Purple"
+          @event.color = "#e21be2"
+        when "Orange"
+          @event.color = "#ed9034"
+        end
+
+        @edit_availabletime = true
 
         respond_to do |format|
           if @event.save
             format.js
           end
+        end
+      else
+        @edit_availabletime = false
+        respond_to do |format|
+          format.js
         end
       end
     end
@@ -268,6 +337,22 @@ class CalendarizeController < ApplicationController
       end
     elsif params[:delete_type] == "delete_availabletime"
       @event = Availabletime.find(params[:availabletime_id])
+
+      if @event.title == "meeting" && session[:user_type] == "secretary"
+        @schedule = Schedule.find(@event.schedule_id)
+        if @schedule.schdate == @event.start
+          @schedule.schdate = nil
+          @schedule.save
+        end
+      end
+
+      if @event.title == "deadline" && session[:user_type] == "secretary"
+        @schedule = Schedule.find(@event.schedule_id)
+        if @schedule.schdeadline = @event.start
+          @schedule.schdeadline = nil
+          @schedule.save
+        end
+      end
       respond_to do |format|
         if session[:user_id] == User.find(@event.user_id).uname
           Availabletime.delete( params[:availabletime_id])
@@ -275,6 +360,99 @@ class CalendarizeController < ApplicationController
         end
       end
     end
+  end
+
+  def google_calendar
+    client = Signet::OAuth2::Client.new(client_options)
+
+    redirect_to client.authorization_uri.to_s
+  end
+
+  def google_calendar_callback
+    client = Signet::OAuth2::Client.new(client_options)
+    client.code = params[:code]
+
+    response = client.fetch_access_token!
+
+    if session[:user_type] == 'secretary'
+      @secretary = Secretary.find(User.find_by( uname: session[:user_id]).id)
+
+      @secretary.token = response["access_token"]
+      @secretary.gcalendar = response["refresh_token"]
+
+      @secretary.save
+    elsif session[:user_type] == 'faculty'
+      @faculty = Faculty.find(User.find_by( uname: session[:user_id]).id)
+
+      @faculty.token = response["access_token"]
+      @faculty.gcalendar = response["refresh_token"]
+
+      @faculty.save
+    end
+
+    session[:gcal_token] = response
+
+    redirect_to root_path
+  end
+
+
+  def import_calendar
+    client = Signet::OAuth2::Client.new(client_options)
+    client.update!(session[:gcal_token])
+
+    service = Google::Apis::CalendarV3::CalendarService.new
+    service.authorization = client
+
+    @event_list = service.list_events('primary',
+                          q: params[:event_keyword],
+                          single_events: true,
+                          order_by: 'startTime',
+                          time_min: Time.now.iso8601)
+
+
+    @event_list.items.each do |event|
+      @tag = event.summary
+
+      @start_time = event.start.date_time.utc
+      @end_time = event.end.date_time.utc
+
+
+
+      case params[:color]
+      when "Red"
+        @color = "#f45942"
+      when "Blue"
+        @color = "#09e9f9"
+      when "Green"
+        @color = "#88ff00"
+      when "Yellow"
+        @color = "#dfe21b"
+      when "Purple"
+        @color = "#e21be2"
+      when "Orange"
+        @color = "#ed9034"
+      end
+
+      @activity_id = params[:activity_id]
+      @member_id = Member.find_by( user_id: User.find_by( uname: session[:user_id]).id).id
+      @schedule_id = params[:meeting_id]
+      @user_id = User.find_by( uname: session[:user_id]).id
+
+      @event = []
+      @event << { id:"1",title:"#{@tag}", allDay: false, start:"#{@start_time}", end:"#{@end_time}", color:"#{@color}"  }
+
+      @availabletime = Availabletime.new( title: @tag,
+                                          start: @start_time,
+                                          end: @end_time,
+                                          color: @color,
+                                          activity_id: @activity_id,
+                                          member_id: @member_id,
+                                          user_id: @user_id,
+                                          schedule_id: @schedule_id)
+      @availabletime.save
+    end
+
+    redirect_to show_path( activity_id: params[:activity_id], meeting_id: params[:meeting_id], show_type: "calendar")
   end
 
   def get_departments
@@ -286,5 +464,52 @@ class CalendarizeController < ApplicationController
         flash.now.alert = "First Sign in!!!"
         redirect_to index_path
     end
+  end
+
+  private
+
+  def update_gcal_token
+    if( session[:gcal_token].present? )
+      begin
+        client = Signet::OAuth2::Client.new(client_options)
+        client.update!(session[:gcal_token])
+
+        service = Google::Apis::CalendarV3::CalendarService.new
+        service.authorization = client
+
+        @calendar_list = service.list_calendar_lists
+
+      rescue Google::Apis::AuthorizationError
+        response = client.refresh!
+
+        session[:gcal_token] = session[:gcal_token].merge(response)
+
+        if session[:user_type] == 'secretary'
+          @secretary = Secretary.find(User.find_by( uname: session[:user_id]).id)
+
+          @secretary.token = session[:gcal_token]["access_token"]
+
+          @secretary.save
+        elsif session[:user_type] == 'faculty'
+          @faculty = Faculty.find(User.find_by( uname: session[:user_id]).id)
+
+          @faculty.token = session[:gcal_token]["access_token"]
+
+          @faculty.save
+        end
+      retry
+      end
+    end
+  end
+
+  def client_options
+    {
+      client_id: Rails.application.secrets.google_client_id,
+      client_secret: Rails.application.secrets.google_client_secret,
+      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
+      scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+      redirect_uri: 'http://localhost:3000/calendarize/google_calendar_callback'
+    }
   end
 end

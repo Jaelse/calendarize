@@ -16,6 +16,10 @@
 
       <% if session[:user_type] == 'secretary' %>
         <li><%= link_to "Create new activity", new_path(type: "activity"),class: "btn btn-link" %></li>
+        <li><%= link_to "Add Your Goolge Calendar", google_calendar_path,class: "btn btn-link" %></li>
+      <% end %>
+      <% if session[:user_type] == 'faculty' %>
+        <li><%= link_to "Add Your Goolge Calendar", google_calendar_path,class: "btn btn-link" %></li>
       <% end %>
     </ul>
   </div>
