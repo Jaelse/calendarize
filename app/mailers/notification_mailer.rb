@@ -1,5 +1,5 @@
 class NotificationMailer < ApplicationMailer
-  default from: "ronald.smilingassassin@gmail.com"
+  default from: "st119370@ait.asia"
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
   #
