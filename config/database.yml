@@ -75,14 +75,15 @@ test: &test
 #
 # You can use this database configuration with:
 #
-#   production:
-#     url:             <%= ENV['DATABASE_URL'] %>
+   production:
+     url:                 postgres://mujazwwblfurqf:3fd63041b978f3556ad34e3958d7f5c1b75b1a61ca28a2495b4ef975c0cee1af@ec2-54-221-246-84.compute-1.amazonaws.com:5432/d207kj3vtmnn2f
+     port:                5432
 #
 production:
   <<:                  *default
-  database:            web17-08_production
-  username:            jaelse
-  password:            <%= ENV['WEB17-08_DATABASE_PASSWORD'] %>
+  database:            d207kj3vtmnn2f
+  username:            mujazwwblfurqf
+  password:            3fd63041b978f3556ad34e3958d7f5c1b75b1a61ca28a2495b4ef975c0cee1af
 
 cucumber:
   <<: *test
