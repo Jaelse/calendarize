@@ -58,6 +58,12 @@ class CalendarizeController < ApplicationController
   end
 
   def home
+
+    RestClient.proxy = ENV["FIXIE_URL"]
+    response = RestClient.get("ldapserv.ait.ac.th:389?ou=people,dc=ait,dc=ac,dc=th")
+    puts response
+
+
     #for showing activity
     if session[:user_type] == 'student'
       @activities = Activity.where( user_id: User.find_by( uname: session[:user_id]).id)
