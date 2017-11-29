@@ -13,14 +13,23 @@ class SessionsController < ApplicationController
     else
 
       ldap = Net::LDAP.new :host => "ldapserv.ait.ac.th",
-                          :port => 636,
+                          :port => 389,
                           :auth => {
                             :method=> :simple,
                             :username => "uid=#{params[:username]},ou=people,dc=ait,dc=ac,dc=th",
-                            :password => "#{params[:password]}"},
-                            :encryption => { method: :simple_tls,
-                              tls_options: { :verify_mode => OpenSSL::SSL::VERIFY_NONE}
+                            :password => "#{params[:password]}"
                             }
+
+      # ldap = Net::LDAP.new :host => "ldapserv.ait.ac.th",
+      #                     :port => 636,
+      #                     :auth => {
+      #                       :method=> :simple,
+      #                       :username => "uid=#{params[:username]},ou=people,dc=ait,dc=ac,dc=th",
+      #                       :password => "#{params[:password]}"},
+      #                       :encryption => { method: :simple_tls,
+      #                         tls_options: { :verify_mode => OpenSSL::SSL::VERIFY_NONE}
+      #                       }
+
       if ldap.bind
         @user = User.find_by( :uname => params[:username])
         if !@user.blank?
