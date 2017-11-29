@@ -45,11 +45,11 @@ gem 'google-api-client', require: 'google/apis/calendar_v3'
 gem 'jquery-rails'
 gem "jquery-ui-rails"
 
-# gem 'net-ldap'
+gem 'net-ldap'
 # gem 'rest-client'
 
-gem 'socksify', github: "quotaguard/socksify-ruby", branch: "master"
-gem 'net-ldap', github: "quotaguard/ruby-net-ldap", branch: "master"
+# gem 'socksify', github: "quotaguard/socksify-ruby", branch: "master"
+# gem 'net-ldap', github: "quotaguard/ruby-net-ldap", branch: "master"
 
 
 gem 'simplecov', :require => false, :group => :test
