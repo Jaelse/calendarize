@@ -4,8 +4,6 @@ class SessionsController < ApplicationController
   end
 
   def create
-    RestClient.proxy = ENV["FIXIE_URL"]
-    response = RestClient.get("ldapserv.ait.ac.th", 389)
 
     if Superadmin.authenticate(params[:username], params[:password])
       session[:user_id] = params[:username]
@@ -32,7 +30,10 @@ class SessionsController < ApplicationController
       #                         tls_options: { :verify_mode => OpenSSL::SSL::VERIFY_NONE}
       #                       }
 
-      if ldap.bind
+      RestClient.proxy = ENV["FIXIE_URL"]
+      response = RestClient.get(ldap.bind)
+
+      if response
         @user = User.find_by( :uname => params[:username])
         if !@user.blank?
           if Secretary.exists?( :user_id => @user.id )
