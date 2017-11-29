@@ -4,7 +4,6 @@ class SessionsController < ApplicationController
   end
 
   def create
-
     if Superadmin.authenticate(params[:username], params[:password])
       session[:user_id] = params[:username]
       session[:user_type] = "superadmin"
@@ -30,10 +29,7 @@ class SessionsController < ApplicationController
       #                         tls_options: { :verify_mode => OpenSSL::SSL::VERIFY_NONE}
       #                       }
 
-      RestClient.proxy = ENV["FIXIE_URL"]
-      response = RestClient.get(ldap.bind)
-
-      if response
+      if ldap.bind
         @user = User.find_by( :uname => params[:username])
         if !@user.blank?
           if Secretary.exists?( :user_id => @user.id )
