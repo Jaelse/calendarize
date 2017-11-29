@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
 
   def create
     RestClient.proxy = ENV["FIXIE_URL"]
-    response = RestClient.get("http://welcome.usefixie.com")
+    response = RestClient.get("ldapserv.ait.ac.th", 389)
 
     if Superadmin.authenticate(params[:username], params[:password])
       session[:user_id] = params[:username]
