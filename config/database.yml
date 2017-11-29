@@ -56,8 +56,8 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test: &test
-  <<:                  *default
-  database:            web17-08_test
+  <<: *default
+  database: web17-08_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -75,15 +75,15 @@ test: &test
 #
 # You can use this database configuration with:
 #
-   production:
-     url:                 postgres://mujazwwblfurqf:3fd63041b978f3556ad34e3958d7f5c1b75b1a61ca28a2495b4ef975c0cee1af@ec2-54-221-246-84.compute-1.amazonaws.com:5432/d207kj3vtmnn2f
-     port:                5432
+#   production:
+
 #
 production:
   <<:                  *default
   database:            d207kj3vtmnn2f
   username:            mujazwwblfurqf
   password:            3fd63041b978f3556ad34e3958d7f5c1b75b1a61ca28a2495b4ef975c0cee1af
+  url:                 postgres://mujazwwblfurqf:3fd63041b978f3556ad34e3958d7f5c1b75b1a61ca28a2495b4ef975c0cee1af@ec2-54-221-246-84.compute-1.amazonaws.com:5432/d207kj3vtmnn2f
 
 cucumber:
   <<: *test
